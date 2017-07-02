@@ -121,12 +121,22 @@ body {
  */
 
 .mastfoot {
-  border-top: 1px solid transparent;
+  border-top: 1px solid #fff;
   color: rgba(255,255,255,.5);
 }
 
-.social{padding-left:5px;padding-right:5px;float:right;margin-right:50px;font-size:18px;}
-.copyright{padding-left:50px;font-size:18px;}
+.social{
+  padding-left:5px;
+  padding-right:5px;
+  float:right;
+  margin-right:50px;
+  font-size:18px;
+}
+
+.copyright{
+  padding-left:50px;
+  font-size:18px;
+}
 
 /*
  * Affix and center
