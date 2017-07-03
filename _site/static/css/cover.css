@@ -47,14 +47,14 @@ body {
   color:rgb(0,163,244);
 }
 
-#shift-1{
+.shift-1{
   margin-top:5%;
   padding-top:5%;
 }
 
-#shift-2{
-  margin-top:10%;
-  padding-top:10%;
+.shift-2{
+  margin-top:15%;
+  padding-top:15%;
 }
 
 .about{
