@@ -1,0 +1,16 @@
+docs:
+
+- title: Home
+  url: /
+
+- title: About
+  url: /about/
+
+- title: Articles
+  url: /articles/
+
+- title: Projects
+  url: /projects/
+
+- title: Travel Blog
+  url: /travel/

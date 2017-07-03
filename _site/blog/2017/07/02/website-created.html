@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="personal website">
   <meta name="author" content="karthik.b">
-  <title>{{ page.title }}</title>
+  <title>#KarthikB is online!</title>
 
   <!-- Bootstrap core CSS -->
   <link href="/static/css/bootstrap.min.css" rel="stylesheet">
@@ -24,11 +24,27 @@
     </a>
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav mr-auto">
-  {% for item in site.data.list.docs %}
-    <li class="nav-item {% if item.url == page.url %}active{% endif %}">
-      <a class="nav-link {% if item.url == page.url %}active{% endif %}" href="{{ item.url }}">{{ item.title }}</a>
+  
+    <li class="nav-item ">
+      <a class="nav-link " href="/">Home</a>
     </li>
-{% endfor %}
+
+    <li class="nav-item ">
+      <a class="nav-link " href="/about/">About</a>
+    </li>
+
+    <li class="nav-item ">
+      <a class="nav-link " href="/articles/">Articles</a>
+    </li>
+
+    <li class="nav-item ">
+      <a class="nav-link " href="/projects/">Projects</a>
+    </li>
+
+    <li class="nav-item ">
+      <a class="nav-link " href="/travel/">Travel Blog</a>
+    </li>
+
 
     </ul>
   </div>
@@ -40,7 +56,18 @@
     
       <div class="cover-container">
         <div class="inner cover">
-          {{ content }}
+          <h1>#KarthikB is online!</h1>
+<p class="meta">02 Jul 2017</p>
+
+<div class="post">
+  <div class="content">
+  <p>The website is very close to be launched!</p>
+  <p>I'd have to thank Jekyll and Github and this <a href="http://jmcglone.com/guides/github-pages/"> link</a> for making this possible</p>
+  <p>A lot of work left but First post!!</p>
+</div>
+
+</div>
+
         </div>
       </div>
 
