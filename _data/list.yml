@@ -5,12 +5,12 @@ docs:
 
 - title: About
   url: /about/
+  
+- title: Projects
+  url: /projects/
 
 - title: Articles
   url: /articles/
-
-- title: Projects
-  url: /projects/
 
 - title: Travel Blog
   url: /travel/

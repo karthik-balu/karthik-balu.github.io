@@ -4,5 +4,12 @@ title: "#Projects"
 ---
 <div class="shift content">
   <h1 id="intro"><code>{{ page.title }}</code> </h1><br>
-  <h1>Work in Progress!</h1>
- </div>
+  <ul class="list-unstyled">
+
+    {% for post in site.posts %}
+    	{% if post.categories contains 'projects' %}
+      <li><span>{{ post.date | date_to_string }}</span> » <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
+    	{% endif %}
+    {% endfor %}
+  </ul>
+  </div> 
