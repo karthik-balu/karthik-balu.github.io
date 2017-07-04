@@ -87,12 +87,12 @@ h1 code{
 
 
 .copyright{
-  margin-left:0px;
-  float:left;
+  float:left !important;
   text-align: left;
-  padding-left:20px;
+  padding-left: 20px;
   font-size:18px;
 }
+
 .navlist{
   padding-left: 69%;
 }
