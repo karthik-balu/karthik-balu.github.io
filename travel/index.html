@@ -5,10 +5,15 @@ title: "#TravelBug"
 <div class="shift content">
   <h1 id="intro"><code>{{ page.title }}</code> </h1><br>
   <ul class="list-unstyled">
-
+  	
     {% for post in site.posts %}
     	{% if post.categories contains 'travel' %}
-      <li><span>{{ post.date | date_to_string }}</span> » <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
+      <li>
+      <div class="row">
+      <div class="col-md-2"><span>{{ post.date | date_to_string }} </span> </div>
+      <div class="col-md-10 text-left"><a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></div>
+      </div>
+      </li>
     	{% endif %}
     {% endfor %}
   </ul>

@@ -8,6 +8,20 @@ code{
   font-family: "Brown Bold",Arial,sans-serif;
 }
 
+.nav-link{
+  color:  #D3D3D3 !important;
+}
+
+.nav-item .active{
+  color:#ffffff !important;
+  border-bottom: thin solid #F0FFF0;
+}
+
+
+.nav-link:hover,
+.nav-link:focus{
+  color:white !important;
+}
 
 #intro{  
   
