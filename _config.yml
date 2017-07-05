@@ -3,5 +3,5 @@ markdown: kramdown
 permalink: /:categories/:year/:month/:day/:title
 # Google services
 google_analytics: UA-102083319-1 
-
-
+gems:
+  - jekyll-sitemap
