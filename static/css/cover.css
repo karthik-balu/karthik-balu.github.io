@@ -58,7 +58,9 @@ ol>li{
   text-align: center;
 }
 
-
+.references{
+	font-size: 15px;
+}
 h1 code{
   color:white;
   background-color: black;
