@@ -8,6 +8,32 @@ code{
   font-family: "Brown Bold",Arial,sans-serif;
 }
 
+ol>li{
+	font-weight: bold;
+}
+
+.center{
+	display: block;
+	margin:auto;
+	width: 200px;
+	height: 200px;
+}
+
+.bigger{
+	width: 500px;
+	height: auto;
+}
+.tinycaption{
+	display: block;
+	text-align: center;
+	font-size: 10px;
+	margin: auto;
+	width: 90%;
+}
+.tinycaption:after{
+	content: '\a';
+	white-space: pre;
+}
 .nav-link{
   color:  #D3D3D3 !important;
 }
