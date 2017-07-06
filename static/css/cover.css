@@ -1,193 +1,216 @@
-a,
-a:hover,
-a:focus{
-  color:black;
+
+html {
+	position: relative;
+	min-height: 100%;
 }
 
-code{
-  font-family: "Brown Bold",Arial,sans-serif;
+body {
+	/* Margin bottom by footer height */
+	background-color: #ffffff;
+	margin-bottom: 60px;
+	font-family:'Helvetica Neue',Arial,sans-serif;
+	overflow-x: hidden !important;
+	font-size: 18px;	    
 }
 
-ol>li{
+body > .container {
+	padding: 60px 15px 0;
+}
+
+.navbar
+{
+	background-color: black !important;
+	font-size: 0.8em;
+}
+
+
+.content{
+ 	margin-top: 20px;
+ 	padding-left: 5px;
+    padding-right: 5px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+	margin: auto;
+	width: 99%;
+	text-align: center;
+}
+
+
+.article1 ol>li{
 	font-weight: bold;
 }
 
-.center{
+
+.center, .image-center , .profile, .tinycaption{
 	display: block;
 	margin:auto;
-	width: 200px;
-	height: 200px;
 }
 
-.bigger{
-	width: 500px;
-	height: auto;
-}
+
 .tinycaption{
-	display: block;
 	text-align: center;
-	font-size: 10px;
-	margin: auto;
+	font-size: 0.7em;
+	line-height: 1;
 	width: 90%;
 }
+
 .tinycaption:after{
 	content: '\a';
 	white-space: pre;
 }
+
+.intro{
+	margin-top:3%;
+}
+
+.hello{
+	margin-top: 10%;
+    font-size: 3em;
+    line-height: 1;
+}
+
+.references{
+	font-size: 0.8em;
+}
+
+h1 code{
+	color:white;
+	background-color: black;
+	font-size:1em;
+	line-height: 1;
+}
+
+h1, .navbar, code, #caption{
+	font-family: "Brown Bold",Arial,sans-serif;
+}
+
+.list-unstyled{
+	font-size: 1em;
+	color:black;
+	line-height: 2;
+}
+
+
+#caption{
+	color:black;
+	font-size:2em;
+	line-height: 1;
+	margin-bottom:0% ;
+	text-align: center;
+}
+
+
+#pitch{
+	margin-top: 20px;
+    margin-bottom: 50px;
+    line-height: 1.7em;
+    font-size: 1.3em;
+}
+
+.about{
+	padding-top: 10px;
+	text-align: justify !important;
+	font-size: 1em;
+	color: black;
+    line-height: 2em;
+    letter-spacing: 0.01rem;
+}
+
+
+
+
+/*images*/
+
+.profile{
+	margin-top:3%;
+	border: 5px solid #333 transparent;
+	width: 128px;
+	height: 128px; 
+	border-radius: 50%;
+
+}
+
+.image-center{
+	max-width: 200px;
+	height: auto;
+}
+
+.image-bigger {
+	max-width: 200px;
+	height: auto;
+}
+
+
+/*Buttons and Links*/
+
+.btn
+{
+	background-color: black;
+	border-color:black;
+
+}
+
+a,
+a:hover,
+a:focus{
+	color:black;
+}
+
 .nav-link{
-  color:  #D3D3D3 !important;
+	color:  #D3D3D3 !important;
 }
 
 .nav-item .active{
-  color:#ffffff !important;
+	color:#ffffff !important;
 }
 
 
 .nav-link:hover,
 .nav-link:focus{
-  color:white !important;
+	color:white !important;
 }
 
-#intro{  
-  
-  margin:auto;
-  width: 100%;
-  font-size:4em;
-  line-height:1;
-  display: block;
-  text-align: center;
+
+#here, .references a:hover,.references a:focus{
+	color:rgb(0,163,244);
 }
 
-.references{
-	font-size: 15px;
-}
-h1 code{
-  color:white;
-  background-color: black;
-}
-
-h1{
-  font-family: "Brown Bold",Arial,sans-serif;
-}
-
-.list-unstyled{
-  font-size: 18px;
-  color:black;
-  line-height: 2;
-}
-.navbar
-{
-  background-color: black !important;
-  font-family: "Brown Bold",Arial,sans-serif;
-}
-
-#caption{
-  color:black;
-  font-size:2em;
-  line-height: 2;
-  margin-bottom:0% ;
-  text-align: center;
-  font-family: "Brown Bold",Arial,sans-serif;
-}
-
-#here{
-  color:rgb(0,163,244);
-}
-
-#pitch{
-  text-align: center;
-  line-height: 2;
-}
-
-.shift{ 
-  padding-top:2%;
-}
-
-.about{
-  text-align: justify !important;
-  font-size: 18px;
-  color: black;
-  line-height: 2;
-}
-
-.content{
-  margin: auto;
-  width: 80%;
-  text-align: center;
-}
-
-.profile{
-  display: block;
-  margin:auto;
-  border: 5px solid #333 transparent;
-  width: 128px;
-  height: 128px; 
-  border-radius: 50%;
-    
-}
-
+/*Footer */
 
 .social{
-  padding-left:5px;
-  padding-right:5px;
-  float:right;
-  margin-right:50px;
-  font-size:18px;
+	padding-left:5px;
+	padding-right:5px;
+	float:right;
+	margin-right:50px;
+	display: inline-block;
+	box-sizing: border-box;
+	font-size: 18px;
+	line-height: 1.2;
 }
 
 
 .copyright{
-  float:left !important;
-  text-align: left;
-  padding-left: 20px;
-  font-size:18px;
+	padding-left: 50px;
 }
 
-.navlist{
-  padding-left: 69%;
-}
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
-}
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-  font-family:'Helvetica Neue',Arial,sans-serif;
-  overflow-x:hidden;
+.row .container{
+	padding-top: 15px;
 }
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 60px;
-  line-height: 60px; /* Vertically center the text there */
-  background-color: #f5f5f5;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	/* Set the fixed height of the footer here */
+	height: 60px;
+	font-size:1em;
+	background-color: #ffffff;
 }
 
-
-/* Custom page CSS
--------------------------------------------------- */
-/* Not required for template or sticky footer method. */
-
-body > .container {
-  padding: 60px 15px 0;
+@media(min-width: 576px){
+.image-bigger {
+	max-width: 200px;
+	height: auto;
 }
-
-.footer > .container {
-  padding-right: 15px;
-  padding-left: 15px;
 }
-
-.btn
-{
-  background-color: black;
-  border-color:black;
-  
-}
-
-
