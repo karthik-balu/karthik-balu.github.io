@@ -10,8 +10,8 @@ title: "#TravelBug"
     	{% if post.categories contains 'travel' %}
       <li>
       <div class="row">
-      <div class="col-md-2"><span>{{ post.date | date_to_string }} </span> </div>
-      <div class="col-md-10 text-left"><a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></div>
+      <div class="col-md-2 col-12"><span>{{ post.date | date_to_string }} </span> </div>
+      <div class="col-md-10 col-12 text-left"><a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></div>
       </div>
       </li>
     	{% endif %}

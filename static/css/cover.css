@@ -36,8 +36,10 @@ body > .container {
 	text-align: center;
 }
 
-
-.article1 ol>li{
+.article{
+	line-height: 1.5;
+}
+.article .outer-list>li{
 	font-weight: bold;
 }
 
@@ -67,7 +69,8 @@ body > .container {
 .hello{
 	margin-top: 10%;
     font-size: 3em;
-    line-height: 1;
+    line-height: 1.5;
+    letter-spacing: 0.001rem;
 }
 
 .references{
@@ -194,7 +197,7 @@ a:focus{
 	padding-left: 50px;
 }
 
-.row .container{
+.footer > .row{
 	padding-top: 15px;
 }
 
@@ -208,9 +211,10 @@ a:focus{
 	background-color: #ffffff;
 }
 
+
 @media(min-width: 576px){
 .image-bigger {
-	max-width: 200px;
+	max-width: 400px !important;
 	height: auto;
 }
 }
