@@ -1,0 +1,169 @@
+---
+layout: post
+title: "Button Press Recorded to Twitter"
+date: 2015-09-30
+category: projects
+---
+<div class="article">
+	<ul class="list-unstyled outer">
+		<li>Create an ‘App’</li>
+		<p>            
+			The first thing you have to do is create an app for the twitter API. Sounds scary, but it’s not. Just go to https://apps.twitter.com/ and log in with your twitter account id and password.
+			Once logged in, hover over your avatar and click My Applications, then click Create a new Application
+		</p>
+		<p>
+			Then you’ll have to complete four fields in the form. Name, Description, website and callback URL. The last two don’t much matter for what we’re doing here. Then you have to tick the box agreeing to their terms and then complete the CAPTCHA. Then click Create Your Twitter Application.
+		</p>
+		<p>
+		<li>Find Your App</li>
+			Hover over your avatar and click on “My Applications”.<br>
+			<img src="/static/images/projects/p1/i1.png" class="image-center image-bigger" />
+			You should now see a page with all your created twitter apps. Click on your new app.<br>
+			You should then see something like this.<br>
+			<img src="/static/images/projects/p1/i2.png" class="image-center image-bigger" />
+		</p>
+		<ol>
+			<li>Setting up Twitter App 1</li>
+			<p>
+				It creates a “Read only” app by default. You can change that later if you want (by clicking the OAuth tab) but we’ll leave it as is for now because we only need read-only access for this program. Further down the page it looks like this.
+				<img src="/static/images/projects/p1/i3.jpg" class="image-center image-bigger" />
+			</p>
+
+			<li>Setting up Twitter app 2</li>
+			<p>
+				Create Access Token. In order for your program to talk to twitter, it needs a way of authenticating. The system used is called OAuth, and it uses access tokens (codes). So you need to click the “Create My Access token” button…
+				<img src="/static/images/projects/p1/i4.jpg" class="image-center image-bigger" />
+			</p>
+
+			<li>Setting up Twitter app 3</li>
+			<p>
+				…to make this happen. Soon after that, you should have an additional section at the bottom of the page (you might need to refresh the page (F5) to see it)…
+				<img src="/static/images/projects/p1/i5.jpg" class="image-center image-bigger" />
+			</p>
+
+			<li>Setting up Twitter app 4</li>
+			<p>
+				Keep this page open. You will need to copy these codes into your program.<br>
+				Install tweepy<br>
+				Before you can use tweepy, you need to get it onto your Pi. Fortunately, it’s a Python extension, so easy to install.
+				<pre><code>sudo apt-get update updates Raspbian package lists
+sudo apt-get install python-dev python-pip</code></pre>
+			</p>
+			<p>
+				Install pip and dev
+				(You may not need python-dev for pip and tweepy, but I installed it anyway.)
+				You could try to install tweepy and sometimes it fails. The reason appears to be an older version of pip in the Raspbian repo. You can get round this with…
+				<code>sudo pip install -U pip</code>
+			</p>
+				
+			<p>
+				(this will uninstall pip and replace it with a version that works).
+				…before you install tweepy.
+				sudo pip install tweepy install tweepy itself
+				You now have all you need to make your Python script talk to twitter.
+
+			</p>
+		</ol>
+		<li>Pin to Pin Connections:</li>
+
+		<div class="row center">
+		<div class="col-12">
+		<table class="table table-responsive table-bordered">
+			<tr>
+				<th>LCM1602 (PCF8574T Module) Pin</th>             
+				<th>Raspberry Pi Pin</th>
+			</tr>
+			<tr>
+				<td>GND</td>
+				<td>Pin 6 (GND)</td>
+			</tr>
+			<tr>
+				<td>Vcc</td>
+				<td>Pin 4(5V)</td>
+			</tr>
+			<tr>
+				<td>SDA</td>
+				<td>Pin 3(SDA1)</td>
+			</tr>
+			<tr>
+				<td>SCL</td>
+				<td>Pin 5(SCL1)</td>
+			</tr>
+		</table>
+		</div>
+		<div class="col-12">
+		<b>Pin 1-16 of LCM1602 is connected with Pin 1-16 LCD module<br></b>
+		</div>
+		<div class="col-12">
+		<table class="table table-responsive table-bordered">
+			<tr>
+				<th>Button</th>
+				<th>Raspberry Pi Pin</th>
+			</tr>
+			<tr>
+				<td>One end</td>
+				<td>Pin 13(GPIO 27)</td>
+			</tr>
+			<tr>
+				<td>Other end </td>
+				<td>Pin 6(GND) </td>
+			</tr>
+		</table>
+		</div>
+		</div>
+		<li>Code:</li>
+		<pre class="pre-scrollable">
+		<code>
+		import I2C_LCD_driver
+		import urllib2
+		import RPi.GPIO as GPIO
+		from time import *
+		import os
+		import subprocess
+
+		GPIO.setmode(GPIO.BCM)
+		GPIO.setup(27,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+		mylcd = I2C_LCD_driver.lcd()
+		mylcd.lcd_clear()
+		mylcd.lcd_display_string("Welcome to ",1)
+		mylcd.lcd_display_string("your doorbell",2)
+		sleep(1)
+
+		def internet_on():
+		try:
+		response=urllib2.urlopen('http://www.google.com',timeout=10)
+		return True
+		except urllib2.URLError as err: pass
+		return False
+
+		if internet_on()==True:
+		print("Internet is set\nup :)")
+		else:
+		print("No internet use\nDoorbell wifi")
+
+		while True:
+			inputValue = GPIO.input(27)
+			if(inputValue == False):
+				print "Button press at", strftime("%d-%m-%Y %H:%M:%S")
+				mylcd.lcd_display_string("Ding Dong at\n", 1)
+				mylcd.lcd_display_string(strftime("%d-%m-%Y %H:%M:%S"), 2)
+				os.system("sudo python tweet.py ")
+				sleep(0.2)</code></pre>
+
+		<li>Output:</li>
+		<div class="row">
+		<div class="col-12 col-md-4">
+		<img src="/static/images/projects/p1/i6.png" class="image-center" />
+		</div>
+		<div class="col-12 col-md-4">
+		<img src="/static/images/projects/p1/i7.png" class="image-center" />
+		</div>
+		<div class="col-12 col-md-4">
+		<img src="/static/images/projects/p1/i8.png" class="image-center" />
+		</div>
+		</div>
+
+
+	</ul>
+</div>
+
