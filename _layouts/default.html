@@ -13,7 +13,8 @@
   <link href="/static/css/font-awesome.min.css" rel="stylesheet">
   <!-- Custom styles for this template -->
   <link rel="stylesheet" href="/static/css/fonts.css" type="text/css">
-  <link href="/static/css/cover.css" rel="stylesheet">
+  <link href="/static/css/cover.css" rel="stylesheet" type="text/css">
+  <link href="/static/css/prettify.css" rel="stylesheet" type="text/css">
   {% if site.google_analytics and jekyll.environment == 'production' %}
   {% include analytics.html %}
   {% endif %}
@@ -39,7 +40,7 @@
   </nav>
   <!-- Begin page content -->
 
-  <div class="container">
+  <div class="container-fluid">
    {{content}}
  </div>
 
@@ -65,5 +66,9 @@
     <script src="/static/js/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script src="/static/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="/static/js/bootstrap.min.js"></script> 
+    <script src="/static/js/prettify.js"></script>
+    <script type="text/javascript">
+    window.onload = PR.prettyPrint();
+    </script>
   </body>
   </html>

@@ -1,0 +1,77 @@
+---
+layout: post
+title: "Television as an Alternative Display for Raspberry Pi "
+date: 2016-06-25
+category: projects
+---
+<div class="article">
+	<ul class="list-unstyled bold-head">
+		<li>Materials Needed:</li>
+		<ul>
+			<li>1x - Raspberry Pi 3</li>
+			<li>2x - Alligator clips</li>
+			<li>1x - RCA – RCA Cable or 1x RCA – 3.5mm cable</li>
+			<li>1x – Television Monitor</li>
+		</ul>
+
+		<li>Purpose:</li>
+		You may be hesitant to buy a new monitor or a new TV with HDMI pin to work with your raspberry pi 3. Do you have a really old unused TV gathering dust in the loft? That would be enough to get going with Raspberry Pi-3!
+
+		<li>Approach 1: Using The Rca-Rca (RYB To Ryb Connections) Cable</li>
+		<ul class="list-unstyled bold-head">
+			<p>
+				<li>Step 1: Raspberry Pi 3 TRRS Connection</li>
+				<img src="/static/images/projects/p2/i1.jpg" class="image-center image-bigger" />
+				The audio jack on the Raspberry Pi 3 is called as a TRRS jack, which stands for Tip Ring Ring Sleeve. This means is that it had four connections instead of the standard three that is common with normal audio applications. The TRRS jack is used on smart phones to provide audio as well as a microphone input, but on the Raspberry Pi 3, it provides audio as well as composite video.
+			</p>
+			<p>
+				By the diagram above, the farthest two connections are for audio, the closest is for video and the one in between is ground. The position of the video being closest to the jack housing, or farthest out in the female jack is critical for this method.
+			</p>
+			<p>
+				<li>Step 2: The Raspberry Pi's Jack</li>
+				<img src="/static/images/projects/p2/i2.jpg" class="image-center image-bigger" />
+				If you take a look at the TRRS jack of the Raspberry Pi 3, you can see a little metal prong which is very close to the opening of the jack. This little prong is the video output pin. It is close to the outside since on the previous diagram, the video pin on the male jack was also in the same place.
+			</p>
+			<p>
+				This makes wiring it up very easy since all you have to do is connect an alligator clip to that little pin. It's very close to the opening so it doesn't even have to go in very far.
+			</p>
+			<p>
+				But word of caution, if you put it too far in, then you won't get any video since it might short with ground or an audio pin. Shorting with ground should not damage the Raspberry Pi since a standard TRS (yes, only one R this time) will short the video and ground, so safety measures have been implemented to prevent damage. 
+			</p>
+			<p>
+				<li>Step 3: Connecting the Pi</li>
+				<div class="row">
+				<div class="col-md-6 col-12">
+				<img src="/static/images/projects/p2/i3.jpg" class="image-center image-bigger" />
+				</div>
+				<div class="col-md-6 col-12">
+				<img src="/static/images/projects/p2/i4.jpg" class="image-center image-bigger" />
+				</div>
+				</div>
+				In the first picture, a black alligator clip connected to the HDMI is used as a ground connection for the video signal since composite video uses one signal wire and one ground wire. We can use anything that is grounded on the Pi (HDMI casing, Ethernet casing, USB casing, GPIO ground, circuit board ground, etc) as long as it is connected to ground. We just chose HDMI since connecting to that case would make the black alligator clip face the same direction as the white one.
+			</p>
+			<p>
+				In the second picture, you can notice the white alligator clip connected to the signal pin of an RCA connector and the black clip connected to the grounding part of the RCA connector. The other end of the RCA cable went into this little portable CRT tv you have -  that can also accept composite video input.
+			</p>
+			<p>
+			<img src="/static/images/projects/p2/i5.jpg" class="image-center image-bigger" />
+				
+				Here the Video Pin(yellow) is connected to video clip of the 3.5mm jack of Pi-3 and the outer casing of video pin is connected to Ground Pin(Pin6) of the Pi3. Other end of RYB RCA connection goes to the Television End.
+			</p>
+			<li>Output:</li>
+			<img src="/static/images/projects/p2/i6.jpg" class="image-center image-bigger" />
+				
+		</ul>
+		<br/>
+		<li>Approach 2: Using The Rca To 3.5mm Cable</li>
+		<ul class="list-unstyled bold-head">
+			<p><li>Step 1:</li> Connect Audio L, Audio R, Video Lines of RCA to Television slots.</p>
+			<p><li>Step 2:</li> Connect the 3.5mm end to 3.5mm port of Raspberry Pi 3.</p>
+			<p><li>Step 3:</li> Connect the Outer part( Final ring - Video) of 3.5mm end to Ground  using alligator chips.(HDMI Casing acts as Ground) 
+			<img src="/static/images/projects/p2/i7.jpg" class="image-center image-bigger" />
+				</p>
+			<p><li>Step 4:</li> Power on the television and Pi-3.</p>
+			<img src="/static/images/projects/p2/i8.jpg" class="image-center image-bigger" />
+				
+		</ul>
+	</div>

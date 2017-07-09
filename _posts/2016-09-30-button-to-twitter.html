@@ -1,11 +1,24 @@
 ---
 layout: post
 title: "Button Press Recorded to Twitter"
-date: 2015-09-30
+date: 2016-09-30
 category: projects
 ---
 <div class="article">
+	<p class="text-justify">
+		I did this project as part of my "documenting applications for Raspberry Pi" work as an Intern for Ensemble Tech. All code/work is not original and based on this <a href="https://docs.google.com/document/d/1e7U_WM1jSo0wgMX5RdpN0eN6p9TWadGYHqWf6yR2JZM/edit">work</a> by Ahmad Khattab. I have learnt the "how- to" from his documentation of Buidling a doorbell and have implemented and documented the small part of tweeting the time. Check it out! 
+	</p>
 	<ul class="list-unstyled outer">
+		<li>Hardware Requirements</li>
+		<p>
+			<ol>
+				<li>Raspberry Pi</li>
+				<li>16x02 LCD module</li>
+				<li>Push button</li>
+				<li>A 1k Resistor to act as Pull-Down for the button's ground connection </li>
+				<li>LCM1602 I2C module(uses PCF8574T) for LCD</li>
+			</ol>
+		</p>
 		<li>Create an ‘App’</li>
 		<p>            
 			The first thing you have to do is create an app for the twitter API. Sounds scary, but it’s not. Just go to https://apps.twitter.com/ and log in with your twitter account id and password.
@@ -15,14 +28,14 @@ category: projects
 			Then you’ll have to complete four fields in the form. Name, Description, website and callback URL. The last two don’t much matter for what we’re doing here. Then you have to tick the box agreeing to their terms and then complete the CAPTCHA. Then click Create Your Twitter Application.
 		</p>
 		<p>
-		<li>Find Your App</li>
+			<li>Find Your App</li>
 			Hover over your avatar and click on “My Applications”.<br>
 			<img src="/static/images/projects/p1/i1.png" class="image-center image-bigger" />
 			You should now see a page with all your created twitter apps. Click on your new app.<br>
 			You should then see something like this.<br>
 			<img src="/static/images/projects/p1/i2.png" class="image-center image-bigger" />
 		</p>
-		<ol>
+		<ol class="list-unstyled bold-head">
 			<li>Setting up Twitter App 1</li>
 			<p>
 				It creates a “Read only” app by default. You can change that later if you want (by clicking the OAuth tab) but we’ll leave it as is for now because we only need read-only access for this program. Further down the page it looks like this.
@@ -46,121 +59,109 @@ category: projects
 				Keep this page open. You will need to copy these codes into your program.<br>
 				Install tweepy<br>
 				Before you can use tweepy, you need to get it onto your Pi. Fortunately, it’s a Python extension, so easy to install.
-				<pre><code>sudo apt-get update updates Raspbian package lists
+				<pre class="prettyprint"><code>sudo apt-get update updates Raspbian package lists
 sudo apt-get install python-dev python-pip</code></pre>
 			</p>
 			<p>
-				Install pip and dev
-				(You may not need python-dev for pip and tweepy, but I installed it anyway.)
-				You could try to install tweepy and sometimes it fails. The reason appears to be an older version of pip in the Raspbian repo. You can get round this with…
-				<code>sudo pip install -U pip</code>
+					Install pip and dev
+					(You may not need python-dev for pip and tweepy, but I installed it anyway.)
+					You could try to install tweepy and sometimes it fails. The reason appears to be an older version of pip in the Raspbian repo. You can get round this with…<br><pre class="prettyprint"><code>sudo pip install -U pip</code></pre>
 			</p>
 				
 			<p>
-				(this will uninstall pip and replace it with a version that works).
-				…before you install tweepy.
-				sudo pip install tweepy install tweepy itself
-				You now have all you need to make your Python script talk to twitter.
+					(this will uninstall pip and replace it with a version that works).
+					…before you install tweepy.
+					sudo pip install tweepy install tweepy itself
+					You now have all you need to make your Python script talk to twitter.
 
 			</p>
 		</ol>
 		<li>Pin to Pin Connections:</li>
+		<div class="container-fluid">
+			<div class="row text-center justify-content-center">
+				<div class="col-12">
+					<table class="table table-inverse table-bordered">
+						<tr>
+							<th>PCF8574T Module</th>             
+							<th>Raspberry Pi Pin</th>
+						</tr>
 
-		<div class="row center">
-		<div class="col-12">
-		<table class="table table-responsive table-bordered">
-			<tr>
-				<th>LCM1602 (PCF8574T Module) Pin</th>             
-				<th>Raspberry Pi Pin</th>
-			</tr>
-			<tr>
-				<td>GND</td>
-				<td>Pin 6 (GND)</td>
-			</tr>
-			<tr>
-				<td>Vcc</td>
-				<td>Pin 4(5V)</td>
-			</tr>
-			<tr>
-				<td>SDA</td>
-				<td>Pin 3(SDA1)</td>
-			</tr>
-			<tr>
-				<td>SCL</td>
-				<td>Pin 5(SCL1)</td>
-			</tr>
-		</table>
+
+						<tr>
+							<td>GND</td>
+							<td>Pin 6 (GND)</td>
+						</tr>
+						<tr>
+							<td>Vcc</td>
+							<td>Pin 4(5V)</td>
+						</tr>
+						<tr>
+							<td>SDA</td>
+							<td>Pin 3(SDA1)</td>
+						</tr>
+						<tr>
+							<td>SCL</td>
+							<td>Pin 5(SCL1)</td>
+						</tr>
+
+					</table>
+				</div>
+				<div class="col-12">
+					<b>Pin 1-16 of LCM1602 module is connected with Pin 1-16 LCD module<br></b>
+				</div>
+				<div class="col-12">
+					<table class="table table-inverse table-bordered">
+
+						<tr>
+							<th>Button</th>
+							<th>Raspberry Pi Pin</th>
+						</tr>
+
+
+						<tr>
+							<td>One end</td>
+							<td>Pin 13(GPIO 27)</td>
+						</tr>
+						<tr>
+							<td>Other end </td>
+							<td>Pin 6(GND) </td>
+						</tr>
+
+					</table>
+				</div>
+			</div>
 		</div>
-		<div class="col-12">
-		<b>Pin 1-16 of LCM1602 is connected with Pin 1-16 LCD module<br></b>
-		</div>
-		<div class="col-12">
-		<table class="table table-responsive table-bordered">
-			<tr>
-				<th>Button</th>
-				<th>Raspberry Pi Pin</th>
-			</tr>
-			<tr>
-				<td>One end</td>
-				<td>Pin 13(GPIO 27)</td>
-			</tr>
-			<tr>
-				<td>Other end </td>
-				<td>Pin 6(GND) </td>
-			</tr>
-		</table>
-		</div>
-		</div>
+		<br>
 		<li>Code:</li>
-		<pre class="pre-scrollable">
-		<code>
-		import I2C_LCD_driver
-		import urllib2
-		import RPi.GPIO as GPIO
-		from time import *
-		import os
-		import subprocess
-
-		GPIO.setmode(GPIO.BCM)
-		GPIO.setup(27,GPIO.IN,pull_up_down=GPIO.PUD_UP)
-		mylcd = I2C_LCD_driver.lcd()
-		mylcd.lcd_clear()
-		mylcd.lcd_display_string("Welcome to ",1)
-		mylcd.lcd_display_string("your doorbell",2)
-		sleep(1)
-
-		def internet_on():
-		try:
-		response=urllib2.urlopen('http://www.google.com',timeout=10)
-		return True
-		except urllib2.URLError as err: pass
-		return False
-
-		if internet_on()==True:
-		print("Internet is set\nup :)")
-		else:
-		print("No internet use\nDoorbell wifi")
-
-		while True:
-			inputValue = GPIO.input(27)
-			if(inputValue == False):
-				print "Button press at", strftime("%d-%m-%Y %H:%M:%S")
-				mylcd.lcd_display_string("Ding Dong at\n", 1)
-				mylcd.lcd_display_string(strftime("%d-%m-%Y %H:%M:%S"), 2)
-				os.system("sudo python tweet.py ")
-				sleep(0.2)</code></pre>
-
+		<div class="row">
+			<div class="col-12">
+				Click on the Script-Names to view and download them!
+			</div>
+			<ol>
+			<div class="col-12">
+				<li><a href="https://github.com/karthik-balu/Button-Press-Twitter/blob/master/lcd2.py">The Main Script</a></li>
+			</div>
+			<div class="col-12">
+				<li><a href="https://github.com/karthik-balu/Button-Press-Twitter/blob/master/tweepy.py">Tweepy.py</a></li>
+			</div>
+			<div class="col-12">
+				<li><a href="https://github.com/karthik-balu/Button-Press-Twitter/blob/master/I2C_LCD_driver.py">I2C_LCD_DRIVER.py</a></li>
+			</div>
+			</ol>
+			
+		</div>
+		<br>
 		<li>Output:</li>
 		<div class="row">
-		<div class="col-12 col-md-4">
-		<img src="/static/images/projects/p1/i6.png" class="image-center" />
-		</div>
-		<div class="col-12 col-md-4">
-		<img src="/static/images/projects/p1/i7.png" class="image-center" />
-		</div>
-		<div class="col-12 col-md-4">
-		<img src="/static/images/projects/p1/i8.png" class="image-center" />
-		</div>
+			<div class="col-12 col-md-4">
+				<img src="/static/images/projects/p1/i6.png" class="image-center" />
+			</div>
+			<div class="col-12 col-md-4">
+				<img src="/static/images/projects/p1/i7.png" class="image-center image-bigger" />
+			</div>
+			<div class="col-12 col-md-4">
+				<img src="/static/images/projects/p1/i8.png" class="image-center" />
+			</div>
 		</div>
 
 
