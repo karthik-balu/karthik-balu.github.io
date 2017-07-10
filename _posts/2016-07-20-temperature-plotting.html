@@ -1,0 +1,324 @@
+---
+layout: post
+title: "Real Time Temperature Plotting with Raspberry Pi and Plot.ly"
+date: 2016-07-20
+category: projects
+---
+<div class="article">
+    <ul class="list-unstyled bold-head">
+        <li>Materials needed:</li>
+        <ol>
+            <li>Raspberry Pi3</li>
+            <li>Connecting pins</li>
+            <li> 1KΩresistor (17 pieces)</li>
+            <li> 10K pot</li>
+            <li> 0.1µF capacitor</li>
+            <li> 100µF capacitor</li>
+            <li> ADC0804 IC</li>
+            <li> LM35 Temperature Sensor</li>
+            <li> Bread Board</li>
+        </ol> 
+        <li>Circuit Connections:</li>
+        <ul class="list-unstyled">
+        <div class="row">
+            <div class="col-12">
+            <li class="text-center font-weight-bold">FULL CIRCUIT:</li>
+            <img src="/static/images/projects/p3/i1.png" class="image-center image-biggest" />
+            </div>
+            <div class="col-12">
+            <li class="text-center font-weight-bold">ADC0804 Pin-out:</li>
+            <img src="/static/images/projects/p3/i2.gif" class="image-center image-bigger" />
+            </div>
+            <div class="col-12">
+            <li class="text-center font-weight-bold">LM35 – Pin Out:</li>
+            <img src="/static/images/projects/p3/i3.jpg" class="image-center image-bigger" />
+            </div>
+        </div>
+        </ul>
+
+        <li>Connection Tables:</li>
+
+        <ul class="list-unstyled">
+            <div class="row">
+            <div class="col-12">
+            <li class="text-center">ADC0804 and Pi3 Connections</li>
+            <table class="table table-inverse table-bordered">
+                <tr>
+                    <th>S.NO</th>
+                    <th>PI3</th>
+                    <th>ADC0804</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Pin02 - +5V</td>
+                    <td>Pin20 –VCC</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Pin06 – GND</td>
+                    <td>Pin 1 –CS<br>
+                        Pin 2- RD<br>
+                        Pin 8 – AGND<br>
+                        Pin 9 – DGND<br>
+                        Pin 4 – CLKIN via 0.1uF<br>
+                        Pin 19 – CLKR via 1k resistor and 0.1uF respectively<br>
+                        Pin07 – V-<br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Pin07 – GPIO4</td>
+                    <td>Pin 18 – DB0 via Voltage Divider</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Pin11 – GPIO 17</td>
+                    <td>Pin 18 – DB0 via Voltage Divider</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Pin13 – GPIO27</td>
+                    <td>Pin 18 – DB0 via Voltage Divider</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>Pin15 – GPIO22</td>
+                    <td>Pin 18 – DB0 via Voltage Divider</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Pin29 – GPIO5</td>
+                    <td>Pin 18 – DB0 via Voltage Divider</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>Pin31 – GPIO6</td>
+                    <td>Pin 18 – DB0 via Voltage Divider</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Pin33 – GPIO13</td>
+                    <td>Pin 18 – DB0 via Voltage Divider</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Pin35 –GPIO 19</td>
+                    <td>Pin 18 – DB0 via Voltage Divider</td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>-</td>
+                    <td>Pin 3 WR to Pin 5 INTR</td>
+                </tr>
+            </table>
+            </div>
+            <div class="col-12">
+            <li class="text-center">LM35 Connections:</li>
+            <table class="table table-inverse table-bordered">
+                <tr>
+                    <th>S.NO</th>
+                    <th>LM35 Pin</th>
+                    <th>CONNECTION</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Pin01 – VCC</td>
+                    <td>Pin02 of Pi3 - +5V</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Pin02 – SIGNAL</td>
+                    <td>PIN06 of ADC0804 – V+<br>
+                        PIN06 of PI3 – GND via 100uF
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Pin03 – GND</td>
+                    <td>PIN 06 of PI3 – GND</td>
+                </tr>
+            </table>
+            </div>
+            <div class="col-12">
+            <li class="text-center">Potentiometer Connections:</li>
+            <table class="table table-bordered table-inverse">
+                <tr>
+                    <th>S.NO</th>
+                    <th>Potentiometer Pin</th>
+                    <th>CONNECTION</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Pin01 – VCC</td>
+                    <td>Pin02 of Pi3 - +5V</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Pin02 – SIGNAL – SET To 1V by Multimeter</td>
+                    <td>PIN09 of ADC0804 – Vref/2</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Pin03 – GND</td>
+                    <td>PIN 06 of PI3 – GND</td>
+                </tr>
+            </table>
+            </div>
+            <div class="col-12">
+            <li class="text-center">Circuit</li>
+            <img src="/static/images/projects/p3/i4.jpg" class="image-center" />
+            </div>
+        </ul>
+        <br>
+        <li>Integrating with plotly:</li>
+        <ul class="list-unstyled bold-head">
+            <p><li>Step 1:</li>
+                Go to www.plot.ly and create a new plotly account. After that go to https://plot.ly/settings/api and create atleast two new streaming tokens. Make a note of your username, API key, streaming tokens.</p>
+                <p><li>Step 2:</li>
+                    Next, install the required modules and dependencies (you can copy and paste this in your terminal): </p>
+                    
+<pre class="prettyprint"><code>sudo apt-get install python-dev
+wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py -O - | sudo python
+sudo easy_install -U distribute
+sudo apt-get install python-pip
+sudo pip install rpi.gpio
+sudo pip install plotly</code></pre>
+                        <p><li>Step 3:</li>
+                            Create a new folder for your project. Create a config.json file in the said folder using a text editor and input your plotly API key, and your plotly streaming tokens.</p> 
+                            <p>Example config.json content: <br>
+                                {<br>
+                                "plotly_streaming_tokens": ["your_stream_token", "another_stream_token"],<br>
+                                "plotly_api_key": "abcdefghij",<br>
+                                "plotly_username": "ABCDEFGH"<br>
+                            }<br>
+                            Now Create a tmp.py file in the same folder to read temperature values and integrate them to plotly.<br>
+                        </p>
+                    </ul>
+                    <li>Code for tmp.py: </li>
+<pre class="prettyprint">
+<code>import plotly.plotly as py
+import json
+import time
+import datetime
+import RPi.GPIO as IO            # calling for header file which helps us use GPIO’s of PI
+import sys
+IO.setwarnings(False)            # do not show any warnings
+
+with open('./config.json') as config_file:
+    plotly_user_config = json.load(config_file)
+
+py.sign_in(plotly_user_config["plotly_username"], plotly_user_config["plotly_api_key"])
+
+url = py.plot([
+    {
+        'x': [], 'y': [], 'type': 'scatter',
+        'stream': {
+            'token': plotly_user_config['plotly_streaming_tokens'][0],
+            'maxpoints': 200
+        }
+    }], filename='Raspberry Pi Streaming Example Values')
+
+print "View your streaming graph here: ", url
+
+stream = py.Stream(plotly_user_config['plotly_streaming_tokens'][0])
+stream.open()
+
+#the main sensor reading and plotting loop
+
+x=1
+b0 =0                                       # integer for storing the delay multiple
+b1 =0
+b2 =0
+b3 =0
+b4 =0
+b5 =0
+b6 =0
+b7 =0
+IO.setmode (IO.BCM)                # programming the GPIO by BCM pin numbers. (like PIN29 as‘GPIO5’)
+IO.setup(4,IO.IN)                        # initialize GPIO Pins as input
+IO.setup(17,IO.IN)
+IO.setup(27,IO.IN)
+IO.setup(22,IO.IN)
+IO.setup(5,IO.IN)
+IO.setup(6,IO.IN)
+IO.setup(13,IO.IN)
+IO.setup(19,IO.IN)
+while 1:                                              # execute loop forever
+    if (IO.input(19) == True):
+        time.sleep(0.001)
+        if (IO.input(19) == True):
+            b7=1                                     # if pin19 is high bit7 is true
+    if (IO.input(13) == True):
+        time.sleep(0.001)
+        if (IO.input(13) == True):
+            b6=1                                     # if pin13 is high bit6 is true
+    if (IO.input(6) == True):
+        time.sleep(0.001)
+        if (IO.input(6) == True):
+            b5=1                                    # if pin6 is high bit5 is true
+    if (IO.input(5) == True):
+        time.sleep(0.001)
+        if (IO.input(5) == True):
+            b4=1                                   # if pin5 is high bit4 is true           
+    if (IO.input(22) == True):
+        time.sleep(0.001)
+        if (IO.input(22) == True):
+            b3=1                                  # if pin22 is high bit3 is true
+    if (IO.input(27) == True):
+        time.sleep(0.001)
+        if (IO.input(27) == True):
+            b2=1                                 # if pin27 is high bit2 is true            
+    if (IO.input(17) == True):
+        time.sleep(0.001)
+        if (IO.input(17) == True):
+            b1=1                                  # if pin17 is high bit1 is true
+    if (IO.input(4) == True):
+        time.sleep(0.001)
+        if (IO.input(4) == True):
+            b0=1                                      # if pin4 is high bit0 is true
+  
+    x = (1*b0)+(2*b1)                        # representing the bit values from LSB to MSB
+    x = x+(4*b2)+(8*b3)
+    x = x+(16*b4)+(32*b5)
+    x = x+(64*b6)+(128*b7)
+    x = x/1.275
+    temp_C = x
+    # convert celsius to fahrenheit
+    temp_F = (x * 9.0 / 5.0) + 32
+    # remove decimal point from millivolts
+    # show only one decimal place for temprature and voltage readings
+    temp_C = "%.1f" % temp_C
+    temp_F = "%.1f" % temp_F
+
+    
+    #print the ADC value
+    print(temp_C)
+    # write the data to plotly
+    stream.write({'x': datetime.datetime.now(), 'y': temp_C})
+
+    # delay between stream posts
+    time.sleep(0.50)
+
+
+    #temp=100,ref=2000mv,read=255/200=1.275countper10mv or 1.275count for 1degree
+
+                                         
+    b0=b1=b2=b3=b4=b5=b6=b7=0      # reset the values
+    time.sleep(0.50)          
+</code></pre>
+
+
+                    <li>Checking real time plotting:</li>
+                    <p>
+                        Run the python code in shell and visit www.plot.ly/~yourusername/0/  to see your data being plotted live. In case of above example, the URL to check would be www.plot.ly/~Karth195/0/<br>
+                        Vary the temperature detected by LM35 sensor by holding a match or lighter to it and see the sensor values on your Pi-3 screen as well as the data being plotted on plotly!</p>
+                    <li>Output:</li>
+                        <li class="text-center">SensorValues-Screenshot-1</li>
+                        <img src="/static/images/projects/p3/i5.png" class="image-center image-bigger" />
+                        <li class="text-center">SensorValues Screenshot-2</li>
+                        <img src="/static/images/projects/p3/i6.png" class="image-center image-bigger" />
+                        <li class="text-center"> Plot.ly screen Capture</li>
+                        <img src="/static/images/projects/p3/i7.png" class="image-center image-bigger" />
+                    </ul>
+                </div>
+

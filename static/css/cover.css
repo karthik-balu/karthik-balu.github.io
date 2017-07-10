@@ -63,7 +63,6 @@ code{
 	margin:auto;
 }
 
-
 .tinycaption{
 	text-align: center;
 	font-size: 0.7em;
@@ -156,15 +155,11 @@ h1, .navbar, code, #caption{
 
 }
 
-.image-center{
+.image-center,.image-bigger ,.image-biggest {
 	max-width: 200px;
 	height: auto;
 }
 
-.image-bigger {
-	max-width: 200px;
-	height: auto;
-}
 
 
 /*Buttons and Links*/
@@ -245,5 +240,9 @@ a:focus{
 		margin-top:3%;
 		font-size: 2em !important;
 		line-height: 1.5 !important;
+	}
+	.image-biggest {
+		max-width: 100% !important;
+		height: auto;
 	}
 }
