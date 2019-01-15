@@ -1,0 +1,64 @@
+---
+layout: post
+title: "About CAN frames "
+date: 2017-10-20
+category: projects
+---
+<div class="article">
+	<p>Lets get some insight on CAN Message frames. There are 4/5 types of message frames based on whether you consider Inter-frame space as a frame or not. Here goes!</p>
+
+	<ul class="list-unstyled bold-head">
+		<li>The Frames of CAN</li>
+		<ul>
+			<li>Data Frame - data from a transmitter to receivers</li>
+			<li>Remote Frame - data request from a node of a particular message ID</li>
+			<li>Error Frame - transmitted when an error is detected</li>
+      <li>Overload Frame - To give a delay between successive data and/or remote frames</li>
+      <li>Inter-Frame Space - Gap before and after a data/remote frame</li>
+		</ul>
+
+
+		<li>Data Frame</li>
+    <img src="/static/images/projects/p4/i2.png" class="image-center image-bigger" />
+		Data Frame has 7 fields.
+		<ul>
+			<li>Start-Of-Frame - dominant bit</li>
+			<li>Arbitration field consisting of 11 bit Identifier and 1 bit for RTR. RTR is set recessive for remote frame and is dominant for Data frame</li>
+			<li>Control field - consist of 2 reserved bits set as dominant and DLC- data length code. DLC specifies length of data that follows. It ranges from 0 to 8 specified as 0000 to 1000 in the 4 bits.</li>
+			<li>Data Field - it has maximum of 8 bytes of data.This is the payload</li>
+      <li>CRC field - This is field for Cyclic Redudancy Check. It has 16 bits of CRC followed by CRC Delimiter. It takes the bits from SOF till Data frame and left shifts each time and EXORs with hex 4599 and generates the CRC. CRC delimiter is recessive</li>
+			<li>Acknowledgment field- it has ACK slot and ACK delimiter. ACK slot is dominant for recessive and set transmitter by receiver if CRC matches. ACK delimiter is recessive  </li>
+      <li>End of Frame - This consists of 7 consecutive recessive bits</li>
+		</ul>
+
+
+		<li>Remote Frame</li>
+    This is transmitted when a node requests data from another node. This has same contents as Data Frame. Only change is RTR bit is set recessive in the Arbitration field and no DATA frame exists.
+
+    <li>Error Frame</li>
+    It is transmitted during an error - Active or Passive error(more on that later). It has 2 fields.
+    <ul>
+      <li>Error Flag field - maximum of 12 bytes. Superposition of error flags from various stations. Active error flag has 6 dominant bits and Passive has 6 recessive bits.</li>
+      <li>Error delimiter - It has 8 recessive bits.</li>
+    </ul>
+
+    <li>Overload Frame</li>
+    It is transmitted in 2 cases - When receiver needs delay internally or when a dominant bit is detected during Intermission. It has 2 fields.
+    <ul>
+      <li>Overload Flag field - It has 6 dominant bits</li>
+      <li>Overload delimiter - It has 8 recessive bits.</li>
+    </ul>
+
+
+    <li>Interframe Space</li>
+    This is a form of separation between 2 frames for Data and Remote Frames.
+    There are two types of Interframe spaces.
+    <ul>
+      <li>The normal Interframe space consists of Intermission and Bus idle. Intermission has 3 recessive bits and Bus Idle is also a recessive bit that signals that nodes can compete for the bus now </li>
+      <li>For error passive node, after the Intermission field, 8 recessive bits of Suspend Transmission is sent before Bus idle is sent.</li>
+    </ul>
+		<p>
+			NOTE: All data taken from CAN 2.0 spec, and all credits for the same rest with Robert Bosch GMBH and original authors. Reproduced for understanding it better.
+		</p>
+
+	</div>
