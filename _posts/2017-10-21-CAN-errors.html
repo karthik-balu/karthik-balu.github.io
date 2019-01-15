@@ -1,0 +1,61 @@
+---
+layout: post
+title: "About Bit Coding and Error handling "
+date: 2017-10-20
+category: projects
+---
+<div class="article">
+	<p>Now diving deeper into CAN- lets see about this bit coding and different errors, error signalling,handling and fault confinement</p>
+
+	<ul class="list-unstyled bold-head">
+		<li>Bit Coding</li>
+		<p>The Bit coding/stuffing rule is simple. It says there can be no more than 5 consecutive dominant/recessive bits.If transmitter detects data like that it inserts compiment of the sequence as the 6th bit. This doesn't apply to fixed form fields such as CRC delimiter, ACK Slot and delimiter and EOF. Error Frame and Overload frame are also exempted.</p>
+
+		<li>Errors</li>
+
+		There are 5 types of errors.
+		<ul>
+			<li>Bit Error - When bus is monitoring the bits and expecting a dominant but receiving a recessive bit, this error is said to have occured.</li>
+			<li>Stuff Error - When 6 consecutive bits are detected.</li>
+			<li>Form Error - Fixed form fields such as CRC delim, ACK field, EOF are not as expected.</li>
+			<li>CRC error - CRC calcualted at receiver differs from one received. </li>
+      <li>Acknowledgment Error -Transmitter doesnt find dominant bit in the ACK slot while monitoring</li>
+		</ul>
+
+
+		<li>Error Signalling</li>
+    <p> Error Flag is sent. For CRC error alone, Error flag is sent after ACK slot. For others, next consecutive bit itself, Error flag is sent. Error Flag can be Active or Passive depending on node is Error-active or Error-passive. </p>
+
+
+    <li>Error Confinement</li>
+    There are two error counters in every node: Transmitter Error counter and Receiver Error Counter.
+    There are three kinds of nodes with respect to Error detected.
+    <ul>
+      <li>Error Active - Error count is less than 127. If greater than 96, internal warning is raised. Actively participates in bus communication</li>
+      <li>Error Passive - Error count is between 128 and 254. Node waits until suspend transmission to retransmit </li>
+      <li>Bus off - Error count is greater than 255. Node is removed from bus.</li>
+    </ul>
+
+    <li>Rules for Error Confinement</li>
+    There are 12 rules governing Error confinement.
+    <ul>
+      <li>Reciever on detecting error except Bit error during ERROR/OVERLOAD flag, REC+=1</li>
+      <li>For Bit error during ERROR/OVERLOAD flag, REC+=8</li>
+      <li>If dominant bit is monitored after receiver sends error flag, REC+=8</li>
+      <li>When Transmitter sends error flag, TEC+=8 except (1)Transmitter is Error passive and detects ACK error and doesnt detect dominant bit while sending Passive Error flag. (2) Stuff error is before RTR field which is recessive but monitored as dominant.</li>
+      <li>If Transmitter detects bit error during Active Error/OVERLOAD flag - TEC+=8</li>
+      <li>When detecting consecutive dominant bits in error flags, for every 14th consecutive bit for active error/Overload and for every 8th consecutive bit for Passive error flag, TEC+=8, REC+=8</li>
+      <li>If successful transmission and no error till EOF and ACK is received, TEC-=1 except if TEC=0 already</li>
+      <li>For successful reception and sending message with ACK bit set, REC-=1 if "REC < = 127". If It is 0, it stays 0. If its greater than 127, it will be set to value between 119 and 127 </li>
+      <li>If TEC>=128 or  REC>=128 Node is error passive </li>
+      <li>If TEC>=255, Node is bus off</li>
+      <li>If TEC<=127 and REC<=127, Node is error active again from error passive.</li>
+      <li>A bus off node becomes error active after 128th occurence of 11 consecutive recessive bits being monitored on the bus</li>
+    </ul>
+
+
+		<p>
+			NOTE: All data taken from CAN 2.0 spec, and all credits for the same rest with Robert Bosch GMBH and original authors. Reproduced for understanding it better.
+		</p>
+
+	</div>
