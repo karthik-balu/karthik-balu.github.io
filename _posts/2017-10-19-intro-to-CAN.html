@@ -1,0 +1,79 @@
+---
+layout: post
+title: "Intro to CAN! "
+date: 2017-10-19
+category: projects
+---
+<div class="article">
+	<p> SO I started with Visteon some 2 months back and this was an organization that produced automotive cockit electronics- This means the dashboard of your car which displays the vehicle speed, engine speed, fuel level, odometer etc., and also the car infotainment systems. At first I was put into Hyundai panel clusters and then moved to Jaguar Land Rover clusters.</p>
+	<p> And I got sight of a 12 inch full TFT cluster that worked on CAN,LIN and ethernet protocols. </p>
+	<p> Thus started my journey with CAN, a fascinating protocol that is the buzzword around various industries. I knew nothing about it and began to read up. My go-to was the Bosch CAN 2 specification </p>
+	<p> CAN stands for Controller Area Network. It is a serial communication  bas-based protocol, that simulates the datalink layer of the OSI model. It is divided into object,transfer and physical layers based on applications each layer performs.</p>
+	<ul class="list-unstyled bold-head">
+		<li>The Layers of CAN</li>
+		<ul>
+			<li>Object Layer - Decides what to do with data received, what data to send</li>
+			<li>Transfer Layer - Deals with abritration, framing, error detection, signalling and confinement</li>
+			<li>Physical Layer - Actual transfer of bits</li>
+		</ul>
+		<img src="/static/images/projects/p4/i1.png" class="image-center image-bigger" />
+
+		<li>Features of CAN</li>
+		CAN has the following features/properties:
+		<ul>
+			<li>Arbitration/Prioritization</li>
+			<li>Broadcasting to all/ Multicast reception </li>
+			<li>Configuration Flexiblity</li>
+			<li>Data Consistency</li>
+			<li>Error detection,signalling,confinement</li>
+		</ul>
+
+
+		<li>Some Important Must-Knows</li>
+		<ul class="list-unstyled bold-head">
+			<p>
+				<li>Node</li>
+				A node or station on a CAN bus is an ECU that performs its own role in the bus. Eg: Instrument Panel Cluster(IPC) is a node. Body Control Module(BCM) is a node.
+			</p>
+			<p>
+				<li>Messages</li>
+				Info on CAN has a fixed format. All info is sent to all nodes. Info routing is not based on address of node.
+			</p>
+			<p>
+				A node can request data from another node through REMOTE TRANSFER REQUEST.
+			</p>
+			<p>
+				<li>Dominant bit, Recessive bit </li>
+				0 is the dominant bit, 1 is the recessive bit.
+			</p>
+			<p>
+				<li>Arbitration</li>
+				Arbitration is done based on a particular set of bits in the frame called as "IDENTIFIER". If bus is idle, data can be sent. And if 2,3 nodes send data concurrently, smallest IDENTIFIER is sent first(bit by bit check is done and dominant bit is preferred).
+			</p>
+			<p>
+				<li>Fault Confinement</li>
+				CAN nodes are able to distinguish short disturbances from permanent failures. Defective nodes are switched off.
+			</p>
+			<p>
+				<li>Acknowledgment</li>
+				All receivers check the consistency of the message being received and will acknowledge a consistent message and flag an inconsistent message.
+			</p>
+			<p>
+				<li>Sleep Mode / Wake-up</li>
+				To reduce the system’s power consumption, a CAN-device may be set into sleep mode
+				without any internal activity and with disconnected bus drivers. The sleep mode is
+				finished with a wake-up by any bus activity or by internal conditions of the system. On
+				wake-up, the internal activity is restarted, although the transfer layer will be waiting for
+				the system’s oscillator to stabilize and it will then wait until it has synchronized itself to
+				the bus activity (by checking for eleven consecutive ’recessive’ bits), before the bus
+				drivers are set to "on-bus" again.<br>
+				In order to wake up other nodes of the system, which are in sleep-mode, a special
+				wake-up message with the dedicated, lowest possible IDENTIFIER (rrr rrrd rrrr; r =
+				’recessive’ d = ’dominant’) may be used.<br>
+			</p>
+
+			<p>
+				NOTE: All data taken from CAN 2.0 spec, and all credits for the same rest with Robert Bosch GMBH and original authors. Reproduced for understanding it better.
+			</p>
+
+	</div>
