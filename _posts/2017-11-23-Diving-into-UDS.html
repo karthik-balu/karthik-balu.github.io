@@ -90,17 +90,20 @@ category: projects
 
         02 10 03 <br>
         06 50 03 00 32 01 FF  <br>
-
-        <b>For negative response - 7f precedes the service followed by reason(Negative Response code -NRC)</b><br>
-        (while vehicle speed is given) 02 10 03 <br>
-        03 7f 10 12 <br>
-
-        Positive Response can be supressed by setting first bit of subfunction(SUPRESS POSITIVE RESPONSE Bit - SPRMIB).
-        0x0032 is P2 performance timer, (50ms) <br>
+				0x0032 is P2 performance timer, (50ms) <br>
         Minimum time before which server has to send a response.<br>
         If it is unable to send response, it has to send NRC-78 - request received response pending<br>
         Then it has to send response within maximum time of 0x01ff - P2 extended performance timer.(5000ms)<br>
-        <img src="/static/images/projects/p5/i3.png" class="image-center image-bigger" />
+        
+
+        <b>For negative response - 7f precedes the service followed by reason(Negative Response code -NRC)</b><br>
+        (while vehicle speed is given) 02 10 03 <br>
+        03 7f 10 22 <br>(22 is conditions not correct NRC)
+
+        Positive Response can be supressed by setting first bit of subfunction(SUPRESS POSITIVE RESPONSE Bit - SPRMIB).
+				Eg:    02 10 83 <br>
+
+				<img src="/static/images/projects/p5/i3.png" class="image-center image-bigger" />
 
 
         <li>Service 11 - ECU Reset</li>
@@ -171,8 +174,8 @@ category: projects
 
 An Overview on Negative Response Codes:
 <img src="/static/images/projects/p5/i6.png" class="image-center image-bigger" />
-
-
+		<br>
+		I have intentionally not covered Service 14 - Clear DTC, Service 19 - Read DTC here. More on them later!
 		<p>
 			NOTE: Images taken from Softing poster, Ford GGDS spec, Vector Diagnostic Seminar Spec, Reproduced here for understanding purposes.
 		</p>
