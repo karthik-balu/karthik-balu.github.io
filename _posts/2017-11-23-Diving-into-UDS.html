@@ -20,9 +20,17 @@ category: projects
       Standards related to UDS: ISO 15765, ISO 14229.
     </p>
 
+    <li>What is a diagnostics service?</li>
+    <ul>
+      <li>A kind of a task for an ECU to execute on command</li>
+      <li>Each service is defined by a request/response message pair</li>
+      <li>Test device sends service request message to ECU</li>
+      <li>ECU sends service response message to test device</li>
+    </ul>
+
 		<li>Addressing Schemes</li>
     There are 4 addressing schemes.
-    Note: One/First byte of Data bytes is generally reserved for length of data being sent. This byte is called Protocol Control information(PCI). It helps determine what kind of transport mechanism to be used.
+    Generally First byte of Data bytes is called Protocol Control information(PCI).
     <ul>
       <li>Normal Addressing: Address in CAN ID.This has the CAN ID, PCI followed by data( max of 7 bytes), 2CAN IDs used - sending/receiving</li>
       <li>Normal Fixed Addressing: All addressing information is in CAN ID.Priorty,ID Mask,Target Address,Source Address in the 29 bit identifier. It also uses 2 CAN ids.  </li>
@@ -30,7 +38,7 @@ category: projects
       <li>Mixed Addressing: Addressing info in Identifier and in first data byte.</li>
     </ul>
 
-    <li>Transort Frames</li>
+    <li>Transport Frames</li>
     There are 4 frames involved in UDS. It is based on UUDT- Unacknowledged Unsegmented Data Transfer and USDT- Unacknowledged segmented data transfer.
     First byte of data contains this information - PCI - Protocol Control information.
     <ul>
@@ -46,9 +54,10 @@ category: projects
       </p>
 
       <li>Single Frame</li>
-      <p> This is for transfer of Unsegmented messages. PCI - first nibble is zero. Second nibble ranges from 0 to 7. </p>
-      <p>Eg: 02 10 01 00 00 00 00 00 </p>
+      <p> This is for transfer of Unsegmented messages. PCI - first nibble is zero. Second nibble ranges from 0 to 7. <br>
+      Eg: 02 10 01 00 00 00 00 00 </p>
     </ul>
+
     <p> Example for Flow Control<br>
       <ul>
         <li>FF--10 18 49 53 4f 20 54 44</li>
@@ -61,19 +70,111 @@ category: projects
       In FC - "3" denotes flow control frame. "0" or "1" denotes clear to send or wait. "02" denotes number of consecutive frames before next Flow control frame-Blocksize. "OO" means this is last flow control frame."14" denotes separation time,"00" means send as fast as possible.
       Then CF's continue
     </p>
-
-
-    <li>What is a diagnostics service</li>
+    <img src="/static/images/projects/p5/i2.png" class="image-center image-bigger" />
+    An understanding about timing Requirements of flow control can be gained from below:
+    <img src="/static/images/projects/p5/i4.png" class="image-center image-bigger" />
+    <li>Overview on Servies</li>
+    This image below will give a quick overview. More details follows in the passages below:
+    <img src="/static/images/projects/p5/i5.png" class="image-center image-bigger" />
     <ul>
-      <li>A kind of a task for an ECU to execute on command</li>
-      <li>Each service is defined by a request/response message pair</li>
-      <li>Test device sends service request message to ECU</li>
-      <li>ECU sends service response message to test device</li>
+      <li>Service 10 - Diagnostic Session Control</li>
+      There are 4 or 5 diagnostic sessions based on OEMs. They are:
+        <ol>
+          <li>Default Session-01</li>
+          <li>Programming Session-02</li>
+          <li>Extended Session-03</li>
+          <li>Safety Extended Session-04</li>
+          <li>EOL session-40</li>
+        </ol>
+        Example:
+
+        02 10 03 <br>
+        06 50 03 00 32 01 FF  <br>
+
+        <b>For negative response - 7f precedes the service followed by reason(Negative Response code -NRC)</b><br>
+        (while vehicle speed is given) 02 10 03 <br>
+        03 7f 10 12 <br>
+
+        Positive Response can be supressed by setting first bit of subfunction(SUPRESS POSITIVE RESPONSE Bit - SPRMIB).
+        0x0032 is P2 performance timer, (50ms) <br>
+        Minimum time before which server has to send a response.<br>
+        If it is unable to send response, it has to send NRC-78 - request received response pending<br>
+        Then it has to send response within maximum time of 0x01ff - P2 extended performance timer.(5000ms)<br>
+        <img src="/static/images/projects/p5/i3.png" class="image-center image-bigger" />
+
+
+        <li>Service 11 - ECU Reset</li>
+        There are 2 subfunctions here.
+        <ol>
+          <li>Hardreset - Similar to Cold reset. The cluster is powered off and start again similar to a cold start</li>
+          <li>Softreset - not supported.</li>
+        </ol>
+        Example:
+
+          02 11 01 <br>
+          02 51 01 <br>
+      <li>Service 22- Read data by Identifier </li>
+      Used to read specific DIDs- Diagnostic Data Identifiers for information.
+      No subfunctions.
+      Eg:<br>
+      03 22 d1 00<br>
+      04 62 d1 00 01<br>
+      <li>Service 23- Read memory by address </li>
+      Used to read ROM Block addresses and return data.
+      No subfunctions.
+      Eg:<br>
+      04 23 16 07 1f<br>
+      05 63 16 07 1f 01<br>
+
+      <li>Service 27 - Security Access</li>
+      Used to Request Security Access Unlock in Extended and Programming Modes. This is necessary for few services like IO control by Identifier, Read Memory by address, Etc.
+      For programming mode access, Services like Request Download, Transfer Data, Request Transfer Exit.
+      Has 2 subfunctions - Request seed(odd subfunction) , Send key(even subfunction, odd+1)
+      There are three security unlock accesses - General/Level2 (03,04) , Extended/Level 17 (21,22), OEM specific/Level 18 (23,24)
+      How it works is, once you request seed, a 3 byte seed is sent by ECU.
+      Then you have to generate Key by an algorithm that uses this seed with 5 byte constant and with some hex value EXORs each bit 64 times and arrives at the 3 byte key. If key matches the one ECU calculates internally, security access is provided.
+
+      <li>Service 2E - Write Data by Identifier</li>
+      Writes data into specific identifiers. Generally not supported
+
+      <li>Service 2F - I/o Control by Identifier</li>
+      Controls specific portions of ECU. Eg: Test screens for LCD(FE0A), Illumination(7139), Chimes(8022)
+
+      <li>Service 31 - Routine Control </li>
+      Runs pre-defined tests and returns results. Eg: 0x202- On Demand self test
+
+      <li>Service 34 - Request Download </li>
+      Start of Download in Flash sequence
+
+      <li>Service 35 - Request Upload </li>
+      Goes to upload scenario, have not come accross this use case
+
+      <li>Service 36 - Transfer Data </li>
+      Actual Transfer of data takes place
+
+      <li>Service 37 - Request Transfer Exit </li>
+      End of Flash sequence has this service.
+
+      <li>Service 3d - Write Memory by address</li>
+      Supposed to write into address location with data. I have not been able to use this yet.
+
+      <li>Service 3e - Tester Present</li>
+      Continuously sends tester present so that session is maintained or routine is run.
+      Has one subfunction - 00 the zero subfunction
+
+      <li>Service 85 - Control DTC Setting</li>
+      Controls whether DTC will be logged or not. Not suported in default session. <br>
+      Has two subfunctions - 01 -on and 02 -off<br>
+
     </ul>
 
 
+An Overview on Negative Response Codes:
+<img src="/static/images/projects/p5/i6.png" class="image-center image-bigger" />
+
+
 		<p>
-			NOTE: Images taken from Softing poster, Reproduced here for understanding purposes.
+			NOTE: Images taken from Softing poster, Ford GGDS spec, Vector Diagnostic Seminar Spec, Reproduced here for understanding purposes.
 		</p>
 
 	</div>
