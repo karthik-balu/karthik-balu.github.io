@@ -1,0 +1,79 @@
+---
+layout: post
+title: "Diving into UDS - Diagnostics! "
+date: 2017-11-23
+category: projects
+---
+<div class="article">
+	<p>I thought I'll get started onto UDS now.. the other important must-know subject with a lot of significance</p>
+
+	<ul class="list-unstyled bold-head">
+		<li>What is UDS?</li>
+		<p>Standing for Unified Diagnostic Services, UDS is a group of services that were put together and developed as a framework. Most cars follow the UDS standard to implement on-board diagnostics. </p>
+    <p>So What first is Diagnostics? It is a set of routines that run inside a car internally to check if ECUs are working properly etc. They also have services that make EOL testing easy, giving information needed by a service engineer at a service centre.
+      It is a very very useful tool helpful to diagnose what's going on.</p>
+    <img src="/static/images/projects/p5/i1.png" class="image-center image-bigger" />
+		<li>How UDS works?</li>
+    <p>UDS is a CAN frame with specific format in the DATA bytes.
+      You generally need to know CAN ID for the node you require Diagnostic information from.(Physical 1:1 addressing).Broadcast/Functional (1:n) is also possible but I have not come across this use-case.
+      Lets go over addressing schemes, frame format and about a few services.
+      Standards related to UDS: ISO 15765, ISO 14229.
+    </p>
+
+		<li>Addressing Schemes</li>
+    There are 4 addressing schemes.
+    Note: One/First byte of Data bytes is generally reserved for length of data being sent. This byte is called Protocol Control information(PCI). It helps determine what kind of transport mechanism to be used.
+    <ul>
+      <li>Normal Addressing: Address in CAN ID.This has the CAN ID, PCI followed by data( max of 7 bytes), 2CAN IDs used - sending/receiving</li>
+      <li>Normal Fixed Addressing: All addressing information is in CAN ID.Priorty,ID Mask,Target Address,Source Address in the 29 bit identifier. It also uses 2 CAN ids.  </li>
+      <li>Extended Addressing: Addressing info in the first data byte. 1 CAN id for all requests</li>
+      <li>Mixed Addressing: Addressing info in Identifier and in first data byte.</li>
+    </ul>
+
+    <li>Transort Frames</li>
+    There are 4 frames involved in UDS. It is based on UUDT- Unacknowledged Unsegmented Data Transfer and USDT- Unacknowledged segmented data transfer.
+    First byte of data contains this information - PCI - Protocol Control information.
+    <ul>
+      <li>First Frame</li>
+      <p>If there are more than 8 bytes of data then PCI will begin with a "1" to indicate first frame. This is first part of a segmented message.
+      </p>
+      <li>Flow Control Frame</li>
+      <p> It is an Acknowledgment from the receiver. This follows the first frame begins with "30". Second byte tells how many Consecutive frames will pass before a Flow control is again sent and Third byte specifies delay between 2 consecutive frames. 00 for as soon as possible.
+      </p>
+
+      <li>Consecutive Frame</li>
+      <p> This follows first flow control frame and begins with "21", goes all the way to "2F" and restarts with "20" if more data is there.
+      </p>
+
+      <li>Single Frame</li>
+      <p> This is for transfer of Unsegmented messages. PCI - first nibble is zero. Second nibble ranges from 0 to 7. </p>
+      <p>Eg: 02 10 01 00 00 00 00 00 </p>
+    </ul>
+    <p> Example for Flow Control<br>
+      <ul>
+        <li>FF--10 18 49 53 4f 20 54 44</li>
+        <li>FC--30 02 14 00 00 00 00 00</li>
+        <li>CF--21 3e 4d 5f 61 72 8e 9f</li>
+        <li>CF--22 1f 2e 6f 8e 92 be bf</li>
+        <li>FC--30 02 14 00 00 00 00 00</li>
+      </ul>
+      Here in First Frame(FF), 018 is the data length. Max is FFF - 4095 bytes length.<br>
+      In FC - "3" denotes flow control frame. "0" or "1" denotes clear to send or wait. "02" denotes number of consecutive frames before next Flow control frame-Blocksize. "OO" means this is last flow control frame."14" denotes separation time,"00" means send as fast as possible.
+      Then CF's continue
+    </p>
+
+
+    <li>What is a diagnostics service</li>
+    <ul>
+      <li>A kind of a task for an ECU to execute on command</li>
+      <li>Each service is defined by a request/response message pair</li>
+      <li>Test device sends service request message to ECU</li>
+      <li>ECU sends service response message to test device</li>
+    </ul>
+
+
+		<p>
+			NOTE: Images taken from Softing poster, Reproduced here for understanding purposes.
+		</p>
+
+	</div>
