@@ -27,7 +27,7 @@ category: projects
 			<li>Control field - consist of 2 reserved bits set as dominant and DLC- data length code. DLC specifies length of data that follows. It ranges from 0 to 8 specified as 0000 to 1000 in the 4 bits.</li>
 			<li>Data Field - it has maximum of 8 bytes of data.This is the payload</li>
       <li>CRC field - This is field for Cyclic Redudancy Check. It has 16 bits of CRC followed by CRC Delimiter. It takes the bits from SOF till Data frame and left shifts each time and EXORs with hex 4599 and generates the CRC. CRC delimiter is recessive</li>
-			<li>Acknowledgment field- it has ACK slot and ACK delimiter. ACK slot is dominant for recessive and set transmitter by receiver if CRC matches. ACK delimiter is recessive  </li>
+			<li>Acknowledgment field- it has ACK slot and ACK delimiter. ACK slot is recessive for transmitter and set dominant by receiver if CRC matches. ACK delimiter is recessive  </li>
       <li>End of Frame - This consists of 7 consecutive recessive bits</li>
 		</ul>
 
@@ -38,7 +38,7 @@ category: projects
     <li>Error Frame</li>
     It is transmitted during an error - Active or Passive error(more on that later). It has 2 fields.
     <ul>
-      <li>Error Flag field - maximum of 12 bytes. Superposition of error flags from various stations. Active error flag has 6 dominant bits and Passive has 6 recessive bits.</li>
+      <li>Error Flag field - maximum of 12 bits. Superposition of error flags from various stations. Active error flag has 6 dominant bits and Passive has 6 recessive bits.</li>
       <li>Error delimiter - It has 8 recessive bits.</li>
     </ul>
 
