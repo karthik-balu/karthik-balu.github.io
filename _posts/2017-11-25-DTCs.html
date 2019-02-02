@@ -1,0 +1,118 @@
+---
+layout: post
+title: "Diving into DTCs! "
+date: 2017-11-25
+category: projects
+---
+<div class="article">
+	<p> I left this alone to cover this part specifically separately. Lets see into what DTC's are, how they are structured, how to Read and clear them. </p>
+
+	<ul class="list-unstyled bold-head">
+		<li>DTC? What's that? Why are they used?</li>
+		<p>DTC stands for Diagnostic Trouble Code. It is used to idenifty faults in nodes. This is the foundation of Diagnostics.
+			A car now-a-days consists of lots of nodes, making it closer to brain surgery than ever.
+			It is very difficult to identify a fault if such a fault exists.
+			To make life easy for service engineers, Nodes run self-tests and when this self test fails, they log something called DTC- Diagnostic Trouble code </p>
+
+
+		<li>How DTCs are structured?</li>
+    <p>
+			DTCs have 4 bytes, 3 bytes to identify them and 1 byte to denote the current status of the DTC.
+		</p>
+			<ol>
+				<li>Byte-1 and Byte-2: Identify the Component that has failed - called as "ROOT DTC" <br>
+					Upper two bits help identify the major system:<br>
+					00-P- code for Powertrain <br>
+					01-C- code for Chassis <br>
+					10-B- code for body <br>
+					11-U- code for Network <br>
+				</li>
+				<img src="/static/images/projects/p6/i1.png" class="image-center image-bigger" />
+				<li>
+					Byte-3: Failure Type Byte ("FTB") - Identifies failure mode of the ECU <br>
+				There are lot of FTBs. ISO-15031-6 has a list. <br>
+				Common Codes include 11 for short circuit to ground, 13 for open circuit. <br>
+			</li>
+			<li>Byte-4: Status Information - There are 8 different states. They are:
+				<ul>
+					<li>Bit 0 - test failed</li>
+					<li>Bit 1 - test failed this/current Operating cycle</li>
+					<li>Bit 2 - pending DTC - test failed current and previous Operating cycle</li>
+					<li>Bit 3 - confirmed DTC - Bit is set until ageing counter(more on that later) is cleared</li>
+					<li>Bit 4 - Test not completed since last clear </li>
+					<li>Bit 5 - Test failed since last clear</li>
+					<li>Bit 6 - Test not completed this Operating cycle</li>
+					<li>Bit 7 - Warning Indicator Requested</li>
+				</ul>
+			</li>
+			</ol>
+
+
+    <li>Service 19 - Read DTC by Identifier</li>
+		<p>This service is used to Read the DTC. It has lot of subfunctions/modes supporting it. I'll go into 5 of them</p>
+
+		<ul>
+      <li>01- Report Number of DTC by status mask </li>
+			<p>This is used to give number of DTCs failing with a specific status.<br>
+			Example:<br>
+			03 19 01 8F <br>
+		04 59 01 8F 03</p>
+      <li>02- Report DTCs by status mask</li>
+			<p>
+			Example: <br>
+			03 19 02 7F <br>
+			10 13 59 02 7F 04 60 11 <br>
+			30 00 00 00 00 00 00 00 <br>
+			21 6C 90 09 51 2F F0 00 <br>
+			22 55 2F F0 00 87 6C 00 <br>
+			4 DTCs - 046011, 900951, F00055, F000087 are reported with status masks 6C,2F,2F and 6C respectively <br>
+		</p>
+      <li>04- Report snapshot record of DTC</li>
+		<p>Gives global/local data associated with DTC such as distance travelled,global real time, internal temperature Etc., <br>
+			Example: <br>
+			06 19 04 04 60 11 10 00 <br>
+			10 23 59 04 04 60 11 2C <br>
+			30 00 00 00 00 00 00 00 <br>
+			21 10 07 DD 00 FF FF FF <br>
+			22 FF DD 01 FF FF FF DD <br>
+			23 02 FF DD 04 FF DD 05 <br>
+			24 FF DD 06 FF 61 B7 DD <br>
+			25 04 00 00 00 00 00 00 <br>
+			07 snapshots are reported above.
+			DD00 - FF FF FF FF - Global Real time
+			DD01 - FF FF FF - Total distance
+			DD02 - FF - Voltage supply
+			DD04 - FF - In Car temperature
+			DD05 - FF - Outdoor Temperature
+			DD06 - FF - Powermode
+			61B7 - DD 04 (Unsure)
+		</p>
+
+      <li>06- Report extended snapshot of DTC</li>
+			<p>Gives extended data of DTC. There are 4 counters here.</p>
+			<ul>
+				<li>Counter 1 - This counter gives number of Operating cycles from last fail, including incomplete tests</li>
+				<li>Counter 2 - This counter gives number of operating cycles from last fail, only having completed tests</li>
+				<li>Counter 3 - This counter gives number of operating cycles from first fail. Also called Ageing counter.</li>
+				<li>Counter 4 - This counter counts number of fails from first fail.</li>
+			</ul>
+			<li>0A- Report all supported DTCs</li>
+			<p>Lists all supported DTCs by the ECU</p>
+    </ul>
+
+		<li>Service 14 - Clear DTCs</li>
+		<p>
+    This service is used to clear the DTCs. It has no subfunction. Specific DTC can also be failed by giving DTC identifier. <br>
+		Erases all information associated with DTC.<br>
+		Example:<br>
+		05 14 FF FF FF <br>
+		05 54 FF FF FF <br>
+    </p>
+
+
+
+		<p>
+			NOTE: Images taken from  Vector Diagnostic Seminar Spec, Reproduced here for understanding purposes.
+		</p>
+
+	</div>
