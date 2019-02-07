@@ -1,0 +1,113 @@
+---
+layout: post
+title: "Network Management! "
+date: 2018-01-10
+category: projects
+---
+<div class="article">
+	<p> Network Management(NM) is an important and interesting subject in CAN networks.
+		Pretty much as the name says, its how the CAN network is managed.
+		Lets look at the role of NM, Types of NM implementations and in-depth analysis of OSEK NM implementation.
+	</p>
+
+	<ul class="list-unstyled bold-head">
+		<li>Role of NM</li>
+		<p>NM has the following roles/tasks: </p>
+		<ol>
+			<li>Startup and shut down of network communication</li>
+			<li>Handling communication failure</li>
+			<li>Appointment for Network Configuration</li>
+			<li>Inspection of network configuration</li>
+			<li>Power management</li>
+			<li>Node management</li>
+		</ol>
+
+		<li>Types of NM</li>
+    <p>There are two kinds of NM implementations:</p>
+			<ol>
+				<li>OSEK NM implementation</li> <br>
+				<li>AutoSAR NM implementation</li> <br>
+			</ol>
+		<p>
+			Side-Note: OSEK and AutoSAR are two kinds of standards/Architectures.
+			OSEK - Open systems and their interfaces for electronics in Motor vehciles
+			AutoSAR - Automotive Open System Architecture
+		</p>
+
+		<li>OSEK NM implementation</li>
+		<p>OSEK uses a token based strategy for NM implementation.
+			OSEK NM has a ring network strategy where-in all NM nodes are taken to be part of a ring.
+			NM messages in OSEK fall in fixed identifier range 500 - 57F.
+			NM messages are basically CAN messages whose data is interpreted and implemented in a certain manner.
+		</p>
+
+		<li>States of OSEK NM</li>
+		<ol>
+			<li>Alive: When a new node enters the network, it tells other nodes of its existence and it is in Alive state. It is also used to setup ring in the network startup phase</li>
+			<img src="/static/images/projects/p7/i1.png" class="image-center image-bigger" />
+			<li>Ring: When node enters into a Ring network with other nodes, it is in Ring state</li>
+			<img src="/static/images/projects/p7/i2.png" class="image-center image-bigger" />
+			After Ring Formation:
+			<img src="/static/images/projects/p7/i3.png" class="image-center image-bigger" />
+			<li>Limphome: When node has no logical successor and is alone in the ring, it is in limphome State </li>
+			<li>Sleep indication: When node is about to sleep, it sets the sleep indication bit</li>
+			<img src="/static/images/projects/p7/i4.png" class="image-center image-bigger" />
+			<li>Sleep acknowledgement: When there is no power and no messages, the node enters a low power consumption state, waiting for a timeout, acknowledging and entering into Sleep</li>
+			<img src="/static/images/projects/p7/i5.png" class="image-center image-bigger" />
+			<p>
+			Note: Node can be in only one of Alive/Ring/Limphome at any point.
+			Node can combine that with Sleep indication and if its last node to go to sleep, Sleep acknowledgement state is set by it.
+			</p>
+		</ol>
+
+		<li>Byte Structure of NM messages:</li>
+		NM messages can have length of 4-8 bytes depending on manufacturer.
+			<ol>
+				<li>Byte-1:
+					It contains address of logical successor in the ring here. In case node is in Alive Mode or in Limphome mode , it will have the station's own address here.
+				</li>
+				<li>Byte-2: It contains Network state information.</li>
+					<ol>
+						<li>Bit 0 - Alive State</li>
+						<li>Bit 1 - Ring State</li>
+						<li>Bit 2 - Limphome state</li>
+						<li>Bit 3 - Reserved</li>
+						<li>Bit 4 - Sleep indication State</li>
+						<li>Bit 5 - Sleep acknowledgement State</li>
+						<li>Bit 6 - Reserved</li>
+						<li>Bit 7 - Reserved</li>
+					</ol>
+
+			<li>Byte-3: Reason for wake up is listed in this byte. Data is interpreted as follows</li>
+				<ul>
+					<li>00 - No entry</li>
+					<li>01 - Wake Up due to Power ON/IGN ON</li>
+					<li>02 - Wake Up due to CAN messages</li>
+					<li>03 - Wake Up due to external events like door warning</li>
+					<li>04 - Wake Up due to internal events like NMWakeUp</li>
+				</ul>
+				<li>Bytes 4-8 - Reserved</li>
+			</ol>
+		CAN Message Example
+		Example: <br>
+		Consider two nodes A and B with address 511 and 512 respectively.<br>
+		0x511 - 11 01<br>
+		0x512 - 12 01<br>
+		After Ring is formed:<br>
+		ox511 - 12 02<br>
+		0x512 - 11 02<br>
+		Consider Node A wants to sleep <br>
+		0x511 - 12 12 <br>
+		0x512 - 11 02 <br>
+		Node B also wants to sleep and conditions for sleep are favourable <br>
+		0x511 - 12 12 <br>
+		0x512 - 11 12 <br>
+
+		0x511 - 12 12 <br>
+		0x512 - 11 32 <br> ( Sleep ack bit is set for last node to sleep once sleep mode is about to be entered)
+
+		<p>
+			NOTE: Images taken from  Thamim Ansari's presenation(Thanks!!), Reproduced here for understanding purposes.
+		</p>
+
+	</div>
