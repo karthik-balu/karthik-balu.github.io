@@ -1,0 +1,117 @@
+---
+layout: post
+title: "The Pre-requistes to Cybersecurity"
+date: 2018-04-11
+category: projects
+---
+<div class="article">
+	<p>
+		So Cybersecurity... This field is all about finding exploitable areas in code and closing it off before the bad guys exploit the vulnerablities.
+		For Cybersecurity validation,you must first know how to spot exploits and vulnerablities in a Code that will provide a way to get in and also how to get in and exploit a system.
+		Exploiting can be anything from accessing data you shouldn't access, breach privileges, control stuff etc.,
+		I'll try to share some resources that will actually help you when you try to do that.
+		This will take a peek at Linux OS, Linux filesystem,permissions,commands, endianness <br>
+	</p>
+
+	<ul class="list-unstyled bold-head">
+		<li>Linux OS</li>
+		<p>
+			What is an OS? <br>
+			OS is basically a software that helps to make,execute and work with other programs. <br>
+			GNU/Linux or Linux is one such software. It has supportive programs like text editors, compiler (most are by GNU) etc in addition to the kernel(Linux) <br>
+			Kernel is responsible for dividing the memory and system resources among various processes.<br>
+		</p>
+		<li>Linux Filesystem</li>
+		<p>First about - Linux Filesystem
+			Linux has a single root filesystem. There is a root directory - "/" and the entire system is attached as branches to this root.
+			Every directory is there for a specific purpose to store files. </p>
+			<ol>
+			<li>/home - for user files</li><br>
+			<li>/etc - for system configuration files</li><br>
+			<li>/bin - Binary files that execute programs</li><br>
+			<li>/dev - Device driver files</li><br>
+			<li>/usr - User program binary files shared by mutliple users - getting obsolete</li><br>
+			<li>/mnt - Mountable media </li><br>
+			<li>/boot - Has files to boot the Filesystem</li><br>
+			<li>/tmp - temporary files</li><br>
+			<li>/var - variable length or temp files that keep changing </li><br>
+			 </ol>
+		For example , When you insert a CDROM/ Pen drive , its filesystem is attached/mounted to existing root, say under /media/user/CD_Name or /media/
+
+
+		<li>Linux Permission System</li>
+		<p>
+			Every file has a owning user and a owning "group"(A group is a group of users other than the owning user).
+			Every file has a permission associated with it in Linux.<br>
+
+			There are three sets of permissions<br>
+			1) User permissions - Permission that a user has over a file<br>
+			2) Group permissions - Permission that the owning group has over a file<br>
+			3) Other permissions - Permission that others other than the owning user and group have over the file.<br>
+
+			Each of User,Group and Other has 3 permissions - Read,Write,Execute.<br>
+			This can be set by using u,g,o and add/remove (+/-) and r/w/x for read write and execute addition or removal <br>
+			Also can be set through octal values for set of ugo in that order.
+			0777 means read,write,execute for all UGO.<br>
+			0666 means read,write only for all UGO <br>
+
+			Owning user/group can be changed through chown command<br>
+			Permissions can be changed through chmod command<br>
+			Syntax: <br>
+			chown user(:group) filename <br>
+			chmod (+/-)permission filename <br>
+			Part inside () means optional <br>
+	</p>
+			<pre class="prettyprint">
+				<code>
+						chmod 0777 afile
+						chmod -x afile
+						chmod u+rwx afile
+						chmod g-x afile
+						chmod o+r a file
+						chown a:b afile
+					</code>
+					</pre>
+				0777, same as u+rwx g+rwx o+rwx -Adds Read,Write,Execute permissions to afile <br>
+
+				-x - Removes all Execute permissions from all ugo<br>
+				u+rwx - Adds Read,write execute for user alone<br>
+				g-x Removes Execute permission for Group<br>
+				o+r Adds Read permission for others<br>
+				chown a:b - a is owning user name, b is owning group name<br>
+<li>Linux Shell/Commandline</li>
+In Linux, shell is where you can type in commands to run programs.(like cmd in windows)<br>
+Commandline is what happens in background when you click that fancy GUI button. Commandline knowledge helps you understand a system better and this bit will cover some basic Linux shell commands<br>
+Default shell in Linux is Bash - Bourne again shell. <br>
+$ is called shell prompt - indicates waiting for user command input <br>
+By default, a shell generally starts at /home/user directory, represented by a ~(tilde)<br>
+Here are some basic linux commands below.
+<ol>
+	<li>grep - search for a pattern</li><br>
+	<li>ls - list contents of directory</li><br>
+	<li>cd - change current working directory</li><br>
+	<li>pwd - prints path of current working directory</li><br>
+	<li>cat - show contents of file on screen</li><br>
+	<li>rm - remove a file/directory</li><br>
+	<li>cp - copy a file/directory</li><br>
+	<li>logout - logs out of current session</li><br>
+	<li>poweroff/shutdown -h now - shuts down PC</li><br>
+	<li>reboot - reboots PC</li><br>
+	<li>passwd - Changes current password</li><br>
+</ol>
+		<li>Endianness</li>
+    <p>
+			Endianness is how bytes are stored in memory locations.
+			For example the data "0x0a0b0c0d" can be stored in two ways.(0x,\x represents data has a hexadecimal base)
+			<ul>
+				<li>In Little Endian method, In one byte, LSB stores the base address and then rest of data is stored incrementally(left to right for each byte)
+				"\x0d\x0c\x0b\x0a "</li>
+				<li>In Big Endian method, MSB stores the base address and then the rest of the data follows.(right to left for each byte)
+				"\x0a\x0b\x0c\x0d "</li>
+
+			</ul>
+
+		</p>
+
+
+	</div>
