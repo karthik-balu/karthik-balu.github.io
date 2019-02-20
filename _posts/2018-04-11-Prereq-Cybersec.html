@@ -58,11 +58,17 @@ category: projects
 
 			Owning user/group can be changed through chown command<br>
 			Permissions can be changed through chmod command<br>
-			Syntax: <br>
-			chown user(:group) filename <br>
-			chmod (+/-)permission filename <br>
-			Part inside () means optional <br>
+				<b>Syntax:</b><br>
+			<pre class="prettyprint">
+				<code>
+
+			chown user(:group) filename
+			chmod (+/-)permission filename
+			</code>
+			</pre>
+			Part inside () means that field is optional <br>
 	</p>
+	<b>Examples:</b><br>
 			<pre class="prettyprint">
 				<code>
 						chmod 0777 afile
@@ -80,6 +86,10 @@ category: projects
 				g-x Removes Execute permission for Group<br>
 				o+r Adds Read permission for others<br>
 				chown a:b - a is owning user name, b is owning group name<br>
+<li>What is a Terminal?</li>
+In older days, a mainframe computer existed with multiple users accessing it with keyboards and monitors connected. These access points were called "Terminals". That concept has stuck till date in Linux, only we dont use physical Terminals nowadays.
+A terminal is a place to enter data, display / print data.
+
 <li>Linux Shell/Commandline</li>
 In Linux, shell is where you can type in commands to run programs.(like cmd in windows)<br>
 Commandline is what happens in background when you click that fancy GUI button. Commandline knowledge helps you understand a system better and this bit will cover some basic Linux shell commands<br>
@@ -99,6 +109,7 @@ Here are some basic linux commands below.
 	<li>poweroff/shutdown -h now - shuts down PC</li>
 	<li>reboot - reboots PC</li>
 	<li>passwd - Changes current password</li>
+	<li>ssh - secure shell - remote connection to another terminal</li>
 </ol>
 		<li>Endianness</li>
     <p>
