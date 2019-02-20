@@ -1,0 +1,85 @@
+layout: post
+title: "A Buffer Overflow Exercise"
+date: 2018-05-23
+category: projects
+---
+<div class="article">
+<p>Buffer Overflow is based on how memory is stored for variables and arrays in a system.
+  The variables are stored in a stack, one location above another. For example in the following code:
+  <pre class="prettyprint">
+    <code>
+      #include<stdio.h>
+      int main()
+      {
+        int x;
+        int a[3];
+        return 0;
+      }
+  </code>
+  </pre>
+  Memory will be stored as -
+  <ol>
+  <li>a[2]</li>
+  <li>a[1]</li>
+  <li> a[0]</li>
+  <li> x</li>
+  <li> main function's return address</li>
+  </ol>
+  Data inside that address will be stored either as per Little Endian format or Big Endian Format <br>
+  The goal of buffer overflow is to override the function's return address with our own controllable address, where we can do some exploitation.
+  To Get a practical example of this and other cybersecurity concepts, there is an exercise/game.
+  It is called as Narnia War Games. It is a capture the flag type of challenge, that focuses on binary and web exploitations.
+  Access it from this link <a href="http://overthewire.ord/wargames/narnia/">here</a>.
+  The goal of the games is to see the source code and executables present in /narnia/ directory and exploit the vulnerabilities in the code to gain the password of next successive level. Passwords are stored in /etc/narnia_pass/”level name”
+
+  You can ssh from A) your linux terminal or from B) Putty on windows to the 0th level, whose password is available on the website.
+  <pre class="prettyprint">
+  <code>
+  ssh narnia0@narnia.labs.overthewire.org -p 2226
+  Password: narnia0
+  cd /narnia
+  </code>
+  </pre>
+  narnia0 above can be replaced with whatever level number and password with that level's password which you need to find out.
+
+  </p>
+  <ul class="list-unstyled bold-head">
+    <li>Snap of how ls -l from /narnia folder looks like:</li>
+    <img src="/static/images/projects/p9/i1.png" class="image-center image-bigger" />
+    <p>Every Executable file(RED colour) Is owned by that particular USER (narnia0 by narnia0, narnia1 by Narnia1) and belongs to group of Successive user(narnia0 belongs to group of narnia1) and so on</p>
+    <li>Snap of /narnia/narnia0.c</li>
+    <img src="/static/images/projects/p9/i2.png" class="image-center image-bigger" />
+    <li>What is the vulnerability?</li>
+    <p>
+      The array “buf” accepts 24 characters from the user in place of 20 characters it can actually hold.
+      <pre class="prettyprint">
+        <code>
+        scanf("%24s",&buf);
+      </code>
+      </pre>
+      In the code, if the integer preceding it has “deadbeef” as its contents, it will open a shell terminal with narnia1 user privileges. We can make it print password of narnia1 user that way.
+    </p>
+    <li>Exploitation Steps:</li>
+    <ol>
+      <li>Check endianness of the system</li>
+      <img src="/static/images/projects/p9/i3.png" class="image-center image-bigger" />
+      You can do it by running the narnia0 executable and entering 20 A's followed by BABA.
+      The program prints the value in the variable "val" as 0x41,0x42,0x41,0x42 - Hex values of ABAB.
+      So It is a Little Endian system.
+      <li>Our goal now is to overflow buf with value to overwrite "val" value as "0xde 0xad 0xbe 0xef" and give a command to print password of narnia1</li>
+      <li>Write  a python shell command to send the characters to the file, including another command to print password from the shell.</li>
+      <img src="/static/images/projects/p9/i4.png" class="image-center image-bigger" />
+      <li>The Password for next level is printed.</li>
+    </ol>
+
+    <p>
+      <li>Behind the scenes explanation:</li>
+        When you set val as "0xdeadbeef",
+        setreuid(geteuid,geteuid) is executed, which sets real user ID and the effective User Id of the calling process - narnia0 process in this case with euid of narnia1.
+        After that, shell /bin/sh is being called. To this shell we are sending a "cat /etc/narnia1" command, with narnia1 privileges which prints that password.
+        We are sending this through echo command, which prints whatever we give as input again, so it gets printed to /bin/sh when it is called.
+    </p>
+
+    </ul>
+
+</div>
