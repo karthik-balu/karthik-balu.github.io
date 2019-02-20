@@ -75,8 +75,8 @@ category: projects
 
     <p>
       <li>Behind the scenes explanation:</li>
-        When you set val as "0xdeadbeef",
-        setreuid(geteuid,geteuid) is executed, which sets real user ID and the effective User Id of the calling process - narnia0 process in this case with euid of narnia1.
+        Python -c command is used to execute python commands on the shell commandline itself. We are loading buf and sending the desired value to the variable val.
+        When you set val as "0xdeadbeef", setreuid(geteuid,geteuid) is executed, which sets real user ID and the effective User Id of the calling process - narnia0 process in this case with euid of narnia1.
         After that, shell /bin/sh is being called. To this shell we are sending a "cat /etc/narnia1" command, with narnia1 privileges which prints that password.
         We are sending this through echo command, which prints whatever we give as input again, so it gets printed to /bin/sh when it is called.
     </p>
