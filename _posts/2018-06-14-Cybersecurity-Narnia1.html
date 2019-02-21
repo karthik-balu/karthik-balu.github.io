@@ -1,0 +1,62 @@
+---
+layout: post
+title: "Exploiting Environmental Variables..."
+date: 2018-06-14
+category: projects
+---
+<div class="article">
+<p>
+  Just like you enter commands like ls,cd into the terminal, you can store data in terminal. How? Through Terminal variables/ shell variables/ Environmental variables.
+  So a program calling an Environmental variable or depending on such variables is susceptible to exploitation as these variables' values can be changed to malicious shellcode and exported.
+  <br>
+  So what is a shell code?<br>
+  A shell code is special set of characters representing commands that run those commands when the compiler compiles it.
+  So when the compiler prints or executes, a command is run, instead of just reading the data.
+  <br>
+  <a href="www.shell-storm.org"><b>Shell-storm.org</b></a> is a great source for shellcodes.<br>
+
+  So an exercise to exploit Environmental Variables now. Narnia Level 1 is all about this.
+  ssh into narnia1 with the password obtained previously.
+  <pre class="prettyprint">
+    <code>
+      ssh narnia1@narnia.labs.overthewire.org -p 2226
+      Password: efeidiedae
+      cd /narnia/
+      cat narnia1.c
+  </code>
+  </pre>
+
+  <ul class="list-unstyled bold-head">
+    <li>Snap of /narnia/narnia1.c</li>
+    <img src="/static/images/projects/p10/i1.png" class="image-center image-bigger" />
+    <li>What is the vulnerability?</li>
+    <p>
+      The Environmental variable EGG is stored in ret variable using getenv() function and ret() is executed.
+      <pre class="prettyprint">
+        <code>
+        ret=getenv("EGG");
+        ret();
+      </code>
+      </pre>
+      So a shell-code to open /bin/sh with narnia2 privileges would get us the password for narnia2.
+    </p>
+    <li>Exploitation Steps:</li>
+    <ol>
+      <li>Choose and copy the shell-code to your clipboard. I used this one <b><a href="http://shell-storm.org/shellcode/files/shellcode-399.php">here</a></b></li>
+      <li>Store the shell-code to EGG variable as a print command from python and export it</li>
+      <li>Execute ./narnia1</li>
+      <li>Shell prompt will pop up on execution. Check whose privileges you have with "whoami" command. Crack the password for Narnia Level 2 with "cat /etc/narnia_pass/narnia2"</li>
+      <img src="/static/images/projects/p10/i2.png" class="image-center image-biggest" />
+    </ol>
+
+    <p>
+      <li>Behind the scenes explanation:</li>
+      EGG env variable stores a shell command to print the malicious shell-code(a set of binary characters that execute something intentional).
+      This particular shellcode used here is a copy of last Narnia level (narnia1) C code,Here I set the group Id or the effective ID as the real ID of the process and call /bin/sh
+      When it is executed, you get the shell with elevated privileges of narnia2(Refer Narnia0 post in this blog for owning user,owning groups of narnia files or do "ls -l" from /narnia)
+      With elevated privileges, you get the password of the next level with a simple cat command. Neat Hack as they say :)
+    </p>
+
+    </ul>
+
+</div>
