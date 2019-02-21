@@ -156,8 +156,9 @@ h1, .navbar, code, #caption{
 }
 
 .image-center,.image-bigger ,.image-biggest {
-	max-width: 200px;
+	max-width: 60%;
 	height: auto;
+	
 }
 
 
@@ -232,7 +233,7 @@ a:focus{
 
 @media(min-width: 1024px){
 	.image-bigger {
-		max-width: 400px !important;
+		max-width: 80% !important;
 		height: auto;
 	}
 
