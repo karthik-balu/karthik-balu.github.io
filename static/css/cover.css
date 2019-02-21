@@ -156,7 +156,7 @@ h1, .navbar, code, #caption{
 }
 
 .image-center,.image-bigger ,.image-biggest {
-	max-width: 60%;
+	max-width: 400px;
 	height: auto;
 	
 }
