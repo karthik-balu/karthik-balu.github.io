@@ -11,7 +11,7 @@ body {
 	margin-bottom: 60px;
 	font-family:'Helvetica Neue',Arial,sans-serif;
 	overflow-x: hidden !important;
-	font-size: 18px;	    
+	font-size: 18px;
 }
 
 body > .container-fluid {
@@ -150,7 +150,7 @@ h1, .navbar, code, #caption{
 	background-color: rgba(192,192,192,0.35);
 	background-clip: padding-box;
 	width: 200px;
-	height: 200px; 
+	height: 200px;
 	border-radius: 50%;
 
 }
@@ -158,7 +158,7 @@ h1, .navbar, code, #caption{
 .image-center,.image-bigger ,.image-biggest {
 	max-width: 400px;
 	height: auto;
-	
+
 }
 
 
@@ -229,21 +229,17 @@ a:focus{
 	background-color: #ffffff;
 }
 
-
-
-@media(min-width: 1024px){
-	.image-bigger {
+.image-bigger {
 		max-width: 80% !important;
 		height: auto;
-	}
+}
 
-	.intro{
+.intro{
 		margin-top:3%;
 		font-size: 2em !important;
 		line-height: 1.5 !important;
-	}
-	.image-biggest {
-		max-width: 100% !important;
-		height: auto;
-	}
+}
+.image-biggest {
+	max-width: 100% !important;
+	height: auto;
 }

