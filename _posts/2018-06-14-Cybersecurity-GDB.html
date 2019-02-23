@@ -30,20 +30,21 @@ category: projects
   <li> b[0]</li>
   <li> main function's return address</li>
   </ol>
-
+<p>
 So when you have a large enough buffer that accepts User input, you can load it with malicious shellcode to gain elevated privileges.
 How? By putting your shell-code in the buffer, overwriting Funcion return address with some address within buffer, and using No-operations to slide the code to your shell-code.
-So, executing the program with this data results in shellcode being executed. This method is called NOP sled method.
+So, executing the program with this data results in shellcode being executed. This method is called NOP sled method.<br>
+</p>
+<p>
+You need to know somethings about GDB for doing all the above. GDB - GNU Debugger is a debugging tool for finding assembly code, setting breakpoints in your code, seeing your program in action.<br>
+disas/disassemble command makes assembly code of the executible visible.<br>
+x/nx $address lets you see n addresses previous to x address specified by $address <br>
+</p>
 
-You need to know somethings about GDB for doing all the above. GDB - GNU Debugger is a debugging tool for finding assembly code, setting breakpoints in your code, seeing your program in action.
-disas/disassemble command makes assembly code of the executible visible.
-x/nx $address lets you see n addresses previous to x address specified by $address
+Lets see this method in practice now. <br>
 
 
-Lets see this method in practice now.
-
-
-Enter narnia2 with password obtained from Level 1.(Refer <a href="https://karthik-balu.github.io/projects/2018/06/14/Cybersecurity-Narnia1"><b>here</b></a>)
+Enter narnia2 with password obtained from Level 1.(Refer <a href="https://karthik-balu.github.io/projects/2018/06/14/Cybersecurity-Narnia1"><b>here</b></a>) <br>
   <ul class="list-unstyled bold-head">
     <li>Snap of /narnia/narnia2.c</li>
     <img src="/static/images/projects/p11/i1.png" class="image-center image-bigger" />
@@ -65,6 +66,7 @@ Enter narnia2 with password obtained from Level 1.(Refer <a href="https://karthi
         gdb /narnia/narnia2
         (gdb)disas main
       </code>
+      </pre>
       You can see the following snap:
       <img src="/static/images/projects/p11/i2.png" class="image-center image-bigger" />
       <li>In this line <b>"Sub $0x90,%esp"</b>, you can see 144(0x90) bytes is assigned to stack pointer(%esp)
