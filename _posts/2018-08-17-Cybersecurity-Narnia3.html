@@ -12,17 +12,20 @@ category: projects
   Before we go into how it's done, we'll probably need to cover two things in Linux- Soft Links and Hard links.
   <ol>
     <li>Soft Link - A soft link in Linux is similar to a shortcut in Windows. It creates a reference of a file in another location, with same permissions.
-      Directories can have softlinks too. Removing original file annuls Soft Link but softlinks can be used across file systems. </li>
-    If "x" is an existing file, <b>ln -s x y</b> creates a soft-link y to x.
+      Directories can have softlinks too. Removing original file annuls Soft Link but softlinks can be used across file systems.
+    If "x" is an existing file, <b>ln -s x y</b> creates a soft-link y to x.<br>
+    Output of ls -il (Full list + inode number in front) <br>
     <pre class="prettyprint">
       <code>
-      -rw-r--r-- 2 karthik karthik 0 Feb 25 23:42 x
-      lrwxrwxrwx 1 karthik karthik 1 Feb 25 23:35 y -> x
+        17830796 -rw-r--r-- 2 karthik karthik 0 Feb 25 23:42 x
+        17833799 lrwxrwxrwx 1 karthik karthik 1 Feb 25 23:35 y -> x
     </code>
     </pre>
+    </li>
     <li>Hard link - This is a duplicate of the physical Inode in the storage medium where the file is stored. Directories cannot have hardlinks in Linux.(Mainly to maintain the tree structure)
       "." and ".." are actually the only directory hardlink exceptions.(Used to represent current and previous directories respectively).
-      <b> ln x m </b> creates a hardlink m for x. Even if x is deleted, m can refer to the Physical inode address and data is intact.
+      <b> ln x m </b> creates a hardlink m for x. Even if x is deleted, m can refer to the Physical inode address and data is intact.<br>
+      Output of ls -il (Full list + inode number in front) <br>
       <pre class="prettyprint">
         <code>
       17830796 -rw-r--r-- 2 karthik karthik 0 Feb 25 23:42 m
@@ -54,7 +57,9 @@ category: projects
     <li>Exploitation Steps:</li>
     <ol>
       <li>Total size of ofile can be 16 bytes character. Total size of ifile should be 32 bytes.</li>
-      <li>My choice for ofile was "/tmp/abcdefghi/a" and ifile was "/tmp/abcdefghi/aaaaaaaaaaaaaaaaa/tmp/abcdefghi/a" </li>
+      <li>My choice for ofile was "/tmp/abcdefghi/a" and ifile was "/tmp/abcdefghi/aaaaaaaaaaaaaaaaa/tmp/abcdefghi/a"
+        You could try other options that fit the 48-16 thing too!
+      </li>
       <li>Create those above paths and symlink/softlink password file to ifile.</li>
       <pre class="prettyprint">
         <code>
@@ -72,10 +77,10 @@ category: projects
 
     <p>
       <li>Behind the scenes explanation:</li>
-      Length of "/tmp/abcdefghi/aaaaaaaaaaaaaaaaa/tmp/abcdefghi/a" is 48 characters long. Since it has no null full string is taken as input string.
-      ifile holds 32 chars and below it in stack ofile is overwritten with "/tmp/abcdefghi/a" - 16 characters long.
-      Ifile is a symlink of the password file and has its contents. The system call open,read and write are used to copy the contents here.
-      The program opens both files and copies contents to the file in ofile, that can be displayed using a simple "cat" command.
+      Length of "/tmp/abcdefghi/aaaaaaaaaaaaaaaaa/tmp/abcdefghi/a" is 48 characters long. Since it has no null character at the end full string is taken as input string. <br>
+      ifile holds 32 chars and below it in stack ofile is overwritten with "/tmp/abcdefghi/a" - 16 characters long.<br>
+      Ifile is a symlink of the password file and has its contents. The system call open,read and write are used to copy the contents here.<br>
+      The program opens both files and copies contents to the file in ofile, that can be displayed using a simple "cat" command.<br>
     </p>
 
     </ul>
