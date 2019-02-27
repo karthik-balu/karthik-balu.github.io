@@ -1,0 +1,64 @@
+---
+layout: post
+title: "Printing your way into privileges! Exploiting format specifiers..."
+date: 2018-10-15
+category: projects
+---
+<div class="article">
+<p>
+  Today's article will exploit the family of printf statements. It's common to simply print a buffer without using format specifiers.
+  Instead of <b>printf("%s",buffer);</b>, People may tend to do this <b>printf("buffer");</b>. This is a potential vulnerability as you can control what you want to write.
+  Things you want to be aware of: <br>
+  1) the %p format specifier is used to print addresses/pointers. If you print it without any data i.e <b>printf("XX %p %p")</b> at one point you would be printing data which you entered onto printf("XX" here) on the stack. <br>
+  2) %n specifier will print the number of characters written out by printf so far to an address.<br>
+
+  Now for some action! SSH into narnia5 with password obtained from <b><a href="https://karthik-balu.github.io/projects/2018/09/22/Cybersecurity-Narnia4">here</a></b>.
+</p>
+
+  <ul class="list-unstyled bold-head">
+
+    <li>Snap of /narnia/narnia5.c</li>
+    <img src="/static/images/projects/p14/i1.png" class="image-center image-biggest" />
+    <li>What is the vulnerability?</li>
+    <p>
+      Commandline argument is written into "buffer" variable directly with "snprintf"
+      <pre class="prettyprint">
+        <code>
+        snprintf(buffer,sizeof buffer,argv[1]);
+      </code>
+      </pre>
+      This gives you control over stack and writing into it with the %p, %n format specifiers and if you write integer i as 500, shell is opened directly.
+    </p>
+    <li>Exploitation Steps:</li>
+    <ol>
+      <li>When you pass %p simply without any arguments to printf multiple times, it will recurse through the stack pointer addresses and print %p itself. To exploit this we can use the address where integer is stored as beginning of our payload to the program.(To recurse it  back)
+        Do dummy attempts with lots of %p as argument preceding AAAA to the program until you find when AAAA is printed again.
+      </li>
+      Snap: <br>
+      <img src="/static/images/projects/p14/i2.png" class="image-center image-biggest" />
+
+      <li>When %p is given 5 times, AAAA is printed again as 0x41414141. We can also see the address of integer printed as 0xffffd62c.</li>
+      <li>%n will print the number of characters written out by printf so far to an address. So as we need 500 in our integer, we need “address%496x$locationofaddressn” as our payload. %496x will print number with 496 paddings to left. So 496+4 bytes of address=500 will be written to address specified.</li>
+      <li>Entering the payload without padding, as can be seen below:</li>
+      Snap:<br>
+      <img src="/static/images/projects/p14/i3.png" class="image-center image-biggest" />
+      <li>In above snap, integer i is overwritten with the number of bytes in address 4. To write 500, we need the 496 byte padding before the above payload.</li>
+      <pre class="prettyprint">
+        <code>
+        /narnia/narnia5 "$(python -c 'import sys; sys.stdout.write("\x2c\xd6\xff\xff%496x%05$n")')"
+      </code>
+      </pre>
+      Snap:<br>
+      <img src="/static/images/projects/p14/i4.png" class="image-center image-biggest" />
+      <li>This overwrites integer i with 500 and opens the shell. A cat command can be used now to get the password of next level.</li>
+    </ol>
+
+    <p>
+      <li>Behind the scenes explanation:</li>
+      We are exploiting the oppurtunity in using the printf without format specifiers here. %p multiple times gives when the stack recurses. This can be used to locate which point of the stack our address will be printed.<br>
+      Further the address to overwrite is given. Padding is done with "%nx". Padding it suitably to get the value which we need to open the shell, we can get the password of the next level.  <br>
+    </p>
+
+    </ul>
+
+</div>
