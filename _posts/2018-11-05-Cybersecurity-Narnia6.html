@@ -1,0 +1,73 @@
+---
+layout: post
+title: "Ret2Libc in Action!"
+date: 2018-11-05
+category: projects
+---
+<div class="article">
+<p>
+  This article is going to go over Return to Libc exploit. Whenever stdlib is included in a C file, a lot of functions are included as a by-product. One of the functions in stdlib/libc is system function.
+   <br>This function takes one string argument and whatever argument is passed, it executes it. <br>
+   </p>
+   <pre class="prettyprint">
+     <code>
+     system("ls -l");
+   </code>
+   </pre>
+   <p>
+   Above code executes ls -l command as if from a shell. The idea of a Ret2libc attack is to reference the function address of system function and to pass /bin/sh as an argument to it.<br>
+  Let's give it a shot now. SSH into narnia6 with password obtained from <b><a href="https://karthik-balu.github.io/projects/2018/10/15/Cybersecurity-Narnia5">here</a></b>.
+</p>
+
+  <ul class="list-unstyled bold-head">
+
+    <li>Snap of /narnia/narnia6.c</li>
+    <img src="/static/images/projects/p15/i3.png" class="image-center image-biggest" />
+    <li>What is the vulnerability?</li>
+    <p>
+      Strcpy of b1 and b2 to commandline arguments is done.
+      Function pointer to puts() function is assigned and this passes b1 to it.
+    </p>
+      <pre class="prettyprint">
+        <code>
+        strcpy(b1,argv[1]);
+        strcpy(b2,argv[2]);
+        fp(b1);
+      </code>
+      </pre>
+    <li>Exploitation Steps:</li>
+    <ol>
+      <li>
+        Idea is to put address of "system" function in b1. Why? Because puts() prints b1 and could be tricked into calling system() function.
+        Enter gdb ./narnia6 from /narnia folder. Run it. Find the address of system with <b>(gdb)print system</b>.
+      </li>
+      Snap: <br>
+      <img src="/static/images/projects/p15/i2.png" class="image-center image-biggest" />
+
+      <li>Now pass this as argument to file after 8 bytes of "A"s. Where to put the "/bin/sh" to this function is the next question. Function's store their arguments generally at %esp+8,$esp+16 and so on. So We need to store "/bin/sh" 8 bytes from function call. We have 8 bytes of b2 in between after which we could give "/bin/sh"</li>
+      <li>Now construct the payload and run the program.</li>
+
+      <pre class="prettyprint">
+        <code>
+        /narnia/narnia6 "$(python -c "print 'A'*8 + '\x50\xc8\xe4\xff')" "$(python -c "print 'A'*8 + '\bin\sh')"
+      </code>
+      </pre>
+
+      <li>The shell prompt is displayed and you can cat the password for the next level.</li>
+
+      Snap:<br>
+      <img src="/static/images/projects/p15/i1.png" class="image-center image-biggest" />
+
+    </ol>
+
+    <p>
+      <li>Behind the scenes explanation:</li>
+      Environmental variables are cleared and argv[] values greater than argv[2] i.e 3 and above are also cleared.<br>
+      This leads to use Ret2Libc using the 2 buffers cleverly.<br>
+       We use the fact a function looks for its arguments at specified locations from the function call address to our advantage.<br>
+      We also call system at the appropriate place with respect to this, thus gaining access to the shell.<br>
+    </p>
+
+    </ul>
+
+</div>
