@@ -224,7 +224,7 @@ a:focus{
 	bottom: 0;
 	width: 100%;
 	/* Set the fixed height of the footer here */
-	height: 10px;
+	/*height: 10px;*/
 	font-size:1em;
 	background-color: #ffffff;
 }
